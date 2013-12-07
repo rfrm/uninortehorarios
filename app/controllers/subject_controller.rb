@@ -3,6 +3,13 @@ require 'typhoeus'
 require 'nokogiri'
 
 class SubjectController < ApplicationController
+	def autocomplete
+		data = Subject.all.collect{|s| {value: "#{s.name} (#{s.code})", data: "#{s.code}"}}
+		respond_to do |format|
+    		format.json  { render :json => data }
+    	end
+	end
+
 	def courses
 		@subject_code = params[:subject_code]
 		info_regex = /Materia: (?<mat>[A-Z]{3}[0-9]{4} - [0-9]{1,2})NRC: (?<nrc>[0-9]{4}).+Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/	
@@ -20,6 +27,7 @@ class SubjectController < ApplicationController
 		    info_text = table.css("tr td p").text.gsub(/(\r|\n|\t)/,"")
 		    info = info_regex.match(info_text)
 		    info_hash = Hash[ info.names.zip( info.captures ) ]
+		    info_hash["mat"] = info_hash["mat"].split(" - ")[0]
 		    course = {"name" => name}.merge(info_hash)
 
 		    # Get schedule from table
@@ -57,13 +65,17 @@ class SubjectController < ApplicationController
 					end
 				end	    
 			end
+
 			course["lecture_teachers"] = lecture_teachers.to_a.sort.join(" y ")
 			subject_teachers.add(course["lecture_teachers"])
 			course["schedule"] = schedule
 			courses.push(course)
 		end
 		respond_to do |format|
-    		format.json  { render :json => {subject_teachers: subject_teachers.to_a, courses: courses }}
+    		format.json  { render :json => {name: courses[0]["name"],
+    										mat: courses[0]["mat"],
+    										subject_teachers: subject_teachers.to_a,
+    										courses: courses }}
   		end
 	end
 end
