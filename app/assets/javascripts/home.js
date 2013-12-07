@@ -19,7 +19,21 @@ Array.prototype.remove = function(from, to) {
 };
 
 function get_banned_teachers (argument) {
-	
+	var banned_teachers={}
+	var $cols = $(".subject-col");
+	for(var i=0;i<$cols.length;i++){
+		var $col = $($cols[i]);
+		var name = $col.find("h5").text();
+		
+		var $banned_teachers = $col.find("[data-original-title=Desbloquear]").parent().siblings().children();
+		if($banned_teachers.length>0){
+			banned_teachers[name]=[];
+			for(var j=0;j<$banned_teachers.length;j++){
+				banned_teachers[name].push($($banned_teachers[j]).text());
+			}
+		}		
+	}
+	return banned_teachers;
 }
 
 function add_subject (subject_data) {
@@ -65,9 +79,11 @@ function add_subject (subject_data) {
 																	'</div>');
 	$panel.append($panel_body);
 	
-	var $col = $('<div class="col-md-4"></div>');
+	var $col = $('<div class="col-md-4 subject-col"></div>');
 	$col.append($panel);
+	$col.hide()
 	$("#subject-wrapper").append($col);
+	$col.slideDown(500);	
 }
 
 $(function(){
@@ -88,11 +104,7 @@ $(function(){
 	})	
 
 	$("body").on("click", "button.close", function(event){
-		current_subjects.remove(current_subjects.indexOf($(this).attr("data-subject-to-delete")))
-		$(this).parent().parent().hide('slow', function(){ $(this).parent().remove(); });
-	});	
-
-	$("body").on("hover", '[data-toggle="tooltip"]', function(){
-		$(this).tooltip({'placement': 'right'});
+		current_subjects.remove(current_subjects.indexOf($(this).attr("data-subject-to-delete")));
+		$(this).parent().parent().slideUp('slow', function(){ $(this).parent().remove(); });
 	});
 });
