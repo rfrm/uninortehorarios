@@ -1,0 +1,49 @@
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
+
+body{
+	margin-top: 50px;
+	font-family: 'Karla', sans-serif;
+}
+
+button span{
+	color: green;
+}
+
+#subject-wrapper{
+	margin-top: 20px;
+}
+
+.btn{
+	padding: 0 5px;
+}
+
+.col-sm-10 p{
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+
+.glyphicon{
+	font-size: 20px;
+}
+
+.list-group{
+	margin-bottom: 0;
+}
+
+.list-group-item {
+	font-size: 14px;
+}
+
+.panel-heading h5{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.tachado{
+	text-decoration:line-through;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }

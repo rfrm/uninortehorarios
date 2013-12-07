@@ -1,0 +1,24 @@
+<div class="container">
+	<div class="row">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#subject-picker" data-toggle="tab">Seleccionar materias</a></li>
+		  	<li><a href="#hour-filter" data-toggle="tab">Filtro de horas</a></li>
+		  	<li><a href="#schedule-viewer" data-toggle="tab">Visor de horarios</a></li>
+		</ul>
+		<div class="tab-content" style="padding:20px">
+			<div id="subject-picker" class="tab-pane fade in active">
+				<%= text_field_tag 'subject_code', nil, placeholder: 'Escribe el nombre de una materia', size: 50, class: "form-control" %>			
+				<div id="subject-wrapper" class="row">
+				</div>
+			</div>
+			
+			<div id="hour-filter" class="tab-pane fade">
+				2
+			</div>
+
+			<div id="schedule-viewer" class="tab-pane fade">
+				3
+			</div>
+		</div>
+	</div>	
+</div>
