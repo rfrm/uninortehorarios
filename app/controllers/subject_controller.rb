@@ -65,7 +65,6 @@ class SubjectController < ApplicationController
 					end
 				end	    
 			end
-
 			course["lecture_teachers"] = lecture_teachers.to_a.sort.join(" y ")
 			subject_teachers.add(course["lecture_teachers"])
 			course["schedule"] = schedule
