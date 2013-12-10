@@ -70,11 +70,18 @@ class SubjectController < ApplicationController
 			course["schedule"] = schedule
 			courses.push(course)
 		end
-		respond_to do |format|
-    		format.json  { render :json => {name: courses[0]["name"],
-    										mat: courses[0]["mat"],
-    										subject_teachers: subject_teachers.to_a,
-    										courses: courses }}
-  		end
+
+		begin
+			respond_to do |format|
+	    		format.json  { render :json => {name: courses[0]["name"],
+	    										mat: courses[0]["mat"],
+	    										subject_teachers: subject_teachers.to_a,
+	    										courses: courses }}
+	  		end
+	  	rescue
+	  		respond_to do |format|
+	    		format.json  { render :json => {error: "Hay problemas con el servidor de la UN."} }
+	  		end
+	  	end
 	end
 end

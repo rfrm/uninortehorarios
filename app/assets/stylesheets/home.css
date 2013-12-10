@@ -5,12 +5,17 @@ body{
 	font-family: 'Karla', sans-serif;
 }
 
-button span{
-	color: green;
+th{
+	width: 15.33%;
 }
 
-th{
-	width: 14.28%;
+#close-help{
+	top: 0;
+	right: 5px;
+}
+
+#filter-cleaner, #save-favorite{
+	padding: 7px
 }
 
 #message-div p{
@@ -23,8 +28,13 @@ th{
 	margin-top: 20px;
 }
 
+#schedule-selector-wrapper{
+	margin-bottom: 15px;
+}
+
 #schedule-table th{
 	/*font-size: 9px;*/
+	padding: 2px;
 	text-align: center;
 }
 
@@ -33,12 +43,21 @@ th{
 	text-align: center;
 }
 
+#schedule-table tr th:first-child{
+	width: 9% !important;
+}
+
 #schedule-table .ui-selected {
 	background-color: rgb(169, 68, 66) !important
 }
 
 #schedule-table .ui-selecting {
 	background-color: rgb(242, 222, 222) !important 
+}
+
+.alert{
+	padding: 0;
+	margin-bottom: 5px;
 }
 
 .autocomplete-selected { background: #F0F0F0; }
@@ -50,6 +69,10 @@ th{
 	background-color: red;
 }
 
+.btn-ban span{
+	color: green;
+}
+
 .col-sm-10 p{
 	margin-top: 5px;
 	margin-bottom: 0px;
@@ -57,7 +80,12 @@ th{
 
 .glyphicon{
 	font-size: 20px;
+	vertical-align: middle !important;
 }
+
+/*.glyphicon.glyphicon-minus-sign{
+	
+}*/
 
 .list-group{
 	margin-bottom: 0;

@@ -1,9 +1,19 @@
-UPDATE_COUNT = 0
-FINISHED = 1
-NEW_SCHEDULE = 2
-                  
-var myHelloWorker = new Worker('/task.js');
-var day_word = a={M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
+// Constants
+GENERATE = 1;
+FILTER = 2;
+FINISHED_GENERATING = 3;
+FINISHED_FILTERING = 4;
+
+// Global variables
+worker_busy = false;
+showed_schedule_index = 0;
+selected_subjects = {};
+generated_schedules = [];
+filtered_generated_schedules = [];
+must_recalculate_schedules = false;
+myHelloWorker = new Worker('/task.js');
+day_letter2day_word = a={M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
+day_word2day_letter = a={"lunes":"M", "martes":"T", "miercoles":"W", "jueves":"R", "viernes":"F", "sabado":"S"};
 
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
@@ -11,6 +21,7 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
+// My Iterator class
 function Iterator(l){
 	this.index = 0;
 	this.list = l;
@@ -21,31 +32,56 @@ Iterator.prototype.next = function(){
 Iterator.prototype.not_finished = function(){
 	return (this.index < this.list.length);
 }
-Iterator.prototype.get_current = function(){
-	return this.list[this.index];
-}
 
-var selected_subjects = {};
+// Functions related to selected subjects object
 function add_subject(subject_data){
+	must_recalculate_schedules = true;
 	selected_subjects[subject_data.mat] = subject_data
 }
+
 function delete_subject(subject_code){
+	must_recalculate_schedules = true;
 	delete selected_subjects[subject_code]
 }
+
 function is_selected(subject_code){
 	selected_subjects[subject_code] != undefined;
 }
+
 function add_banned_teacher(subject_code, teacher){
-	if(selected_subjects[subject_code].banned_teachers === undefined){
+	if(selected_subjects[subject_code].banned_teachers === undefined)
 		selected_subjects[subject_code].banned_teachers = [teacher];
-	}
-	else{
+	else
 		selected_subjects[subject_code].banned_teachers.push(teacher);
-	}
 }
 function delete_banned_teacher(subject_code, teacher){
 	var index = selected_subjects[subject_code].banned_teachers.indexOf(teacher);
 	selected_subjects[subject_code].banned_teachers.remove(index);
+}
+function add_banned_hour(day, hour){
+	if( selected_subjects.banned_hours === undefined )
+		selected_subjects.banned_hours = {};
+	
+	if( selected_subjects.banned_hours[day] === undefined)
+		selected_subjects.banned_hours[day] = [hour]
+	else
+		selected_subjects.banned_hours[day].push(hour);
+}
+function is_banned_hour(day, hour){
+	if(selected_subjects.banned_hours === undefined)
+		return false;
+	if(selected_subjects.banned_hours[day] !== undefined){
+		var banned_hours = selected_subjects.banned_hours[day];
+		if( banned_hours.indexOf(hour) != -1)
+			return true;
+		return false
+	}
+	return false;
+}
+function delete_banned_hour(day, hour){
+	var banned_hours = selected_subjects.banned_hours[day]
+	if(banned_hours !== undefined && banned_hours.length > 0 )
+		banned_hours.remove(banned_hours.indexOf(hour));
 }
 
 function hour_weight(hour){
@@ -67,6 +103,8 @@ function hour_weight(hour){
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Functions related to course instances
 function course_weight(course){
 	var weight=0, hour, hours, day, it;
 	for(day in course.schedule){
@@ -102,14 +140,47 @@ function subject_codes(){
 	return codes;
 }
 
-var count=0;
-var generated_schedules = [];
-
 function sort_subjects_courses(){
 	var subject_code;
 	for(subject_code in selected_subjects){
 		selected_subjects[subject_code].courses.sort(function(a, b){return course_weight(a)-course_weight(b)});
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Worker comunication related functions
+function worker_generate_schedules(){
+	if(subject_codes().length > 0){
+		show_wait_gif()
+		draw_bussy_alert();
+		myHelloWorker.postMessage({command: GENERATE, selected_subjects: selected_subjects});		
+	}
+	else{
+		draw_no_subject_alert();
+	}
+}
+
+function worker_filter_schedules(){
+	if(subject_codes().length > 0){
+		show_wait_gif()
+		draw_filtering_alert();
+		showed_schedule_index = 0;
+		myHelloWorker.postMessage({command: FILTER, selected_subjects: selected_subjects, generated_schedules: generated_schedules});		
+	}
+	else{
+		draw_no_subject_alert();
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Graphical interface related functions
+function show_wait_gif(){
+	$(".wait").addClass("waiting");	
+}
+
+function hide_wait_gif(){
+	$(".wait").removeClass("waiting");
 }
 
 function draw_schedule(schedule){
@@ -121,14 +192,15 @@ function draw_schedule(schedule){
 			var hour_it = new Iterator(course.schedule[day]);
 			while(hour_it.not_finished()){
 				var hour = hour_it.next();
-				$("#cell-"+day_word[day]+"-"+hour).text(course.name);
+				$("#cell-"+day_letter2day_word[day]+"-"+hour).text(course.name);
 			}
 		}
 	}
 }
 
-function show_subject_panel(subject_data) {
-	var $teacher_list, $teacher_row, $col, $panel, $panel_body, subject_name, subject_code, teacher_name, i, j;
+function create_subject_panel(subject_data) {
+	var $teacher_list, $teacher_row, $col, $panel, $panel_body, subject_name,
+	     subject_code, teacher_name, i, j;
 
 	subject_code = subject_data.mat;
 	subject_name = subject_data.name;
@@ -137,12 +209,12 @@ function show_subject_panel(subject_data) {
 		teacher_name = subject_data.subject_teachers[i];
 		$teacher_row = $('<li class="list-group-item">'+
 							'<div class="row">'+
-								'<div class="col-sm-2">'+
-									'<button class="btn btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Bloquear">'+
+								'<div class="col-sm-3">'+
+									'<button class="btn btn-default btn-ban btn-block" data-toggle="tooltip" data-placement="top" data-original-title="Bloquear">'+
 										'<span class="glyphicon glyphicon-check"></span>'+
 									'</button>'+
 								'</div>'+
-								'<div class="col-sm-10">'+
+								'<div class="col-sm-9">'+
 									'<p>'+teacher_name+'</p>'+
 								'</div>'+
 							'</div>'+
@@ -191,7 +263,51 @@ function show_subject_panel(subject_data) {
 	$col.slideDown(500);	
 }
 
-function initialize_schedule_table(){
+function set_schedule_index(value){
+	showed_schedule_index = value;
+	$("#schedule-index").val(showed_schedule_index+1);
+	draw_schedule(filtered_generated_schedules[showed_schedule_index]);
+}
+
+function draw_bussy_alert(){
+	if(!worker_busy){
+		worker_busy = true;
+		show_wait_gif();		
+		$("#message-board").attr("class", "alert alert-info")
+		$("#message-board").html('<p>Generando horarios, por favor espera.</p>');
+	}
+}
+
+function draw_no_subject_alert(){
+	$("#message-board").attr("class", "alert alert-warning");
+	$("#message-board").html('<p>Debes seleccionar al menos una materia.</p>');
+}
+
+function draw_filtering_alert(){
+	$("#message-board").attr("class", "alert alert-info");
+	$("#message-board").html('<p>Aplicando filtros.</p>');
+}
+
+function draw_filtered_schedules_alert(){
+	hide_wait_gif();
+	worker_busy = false;
+	if(generated_schedules.length>0){
+		if(filtered_generated_schedules.length > 0){
+			$("#message-board").attr("class", "alert alert-success");
+			$("#message-board").html('<p>Se generaron '+generated_schedules.length+' horario(s), y '+filtered_generated_schedules.length+' cumple(n) con los filtros.</p>');
+		}
+		else{
+			$("#message-board").attr("class", "alert alert-warning");
+			$("#message-board").html('<p>Se generaron '+generated_schedules.length+' horario(s), pero los filtros no pueden ser cumplidos.</p>');
+		}
+	}
+	else{
+		$("#message-board").attr("class", "alert alert-warning");
+		$("#message-board").html('<p>No se pudieron generar horarios con las materias seleccionadas y los filtros aplicados.</p>');
+	}
+}
+
+function draw_schedule_table(){
 	var mousedown = false;
 	var $table = $("#schedule-table");
 	var titles = ["Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -221,70 +337,109 @@ function initialize_schedule_table(){
 }
 
 $(function(){
+
+	/* If I don't do this, the ajax indicator gif is not displayed 
+	   the first time is needed. */
+	show_wait_gif();
+	setTimeout(function(){
+		hide_wait_gif();	
+	}, 50);
+	
+
+	/* This gets the course list from the server and feeds it to the 
+	   autocomplete plugin*/
 	$.getJSON('/subject/autocomplete').done(function(data){
 		$('#subject_code').autocomplete({
 		    lookup: data,
 		    onSelect: function (selection) {
 		    	var subject_code = selection.data;
 		    	if( !is_selected(subject_code) ){
-		    		$(this).val(""); //Clear textfield		    				    		
-		    		$(".wait").addClass("waiting");
+		    		show_wait_gif();	    	
+		    		$(this).val(""); //Clear textfield			    		
 			    	$.post("/subject/courses", {subject_code: subject_code}, function(data) {
-						$(".wait").removeClass("waiting");
-			    		add_subject(data);
-			    		sort_subjects_courses();			    		
-			    		show_subject_panel(data);
+			    		if( data.error !== undefined){
+			    			$("#subject-wrapper").prepend(
+								'<div class="alert alert-danger alert-dismissable">'+
+								  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+								  'Hay problemas para contactar el servidor de la Universidad. Inténtalo de nuevo.'+
+								'</div>'
+			    			);
+			    			hide_wait_gif()
+			    		}
+			    		else{
+			    			
+				    		add_subject(data);
+				    		create_subject_panel(data);
+				    		hide_wait_gif()
+				    		sort_subjects_courses();			    			
+			    		}			    		
 			    	}, "json");	
 		    	}
 		    }
 		});
 	})
 
-	initialize_schedule_table();
+	draw_schedule_table();
 
-	$("#generate-schedules").click(function(){
-		generated_schedules = []
-		$(".wait").addClass("waiting");
-		myHelloWorker.postMessage(selected_subjects);
-	});
-	
-	
-
-	myHelloWorker.addEventListener("message", function (event) {
-		switch(event.data.command){
-			case UPDATE_COUNT:
-				$("#schedule-count").text(event.data.count);
-				break;
-			case FINISHED:
-				$(".wait").removeClass("waiting");
-				break;
-			case NEW_SCHEDULE:
-				generated_schedules.push(event.data.schedule);
-				break;
-		}	
-	});
-	
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		if( $(e.target).attr("href")=="#schedules-viewer" &&
-			$(e.relatedTarget).attr("href")=="#subject-picker"){
-				
+		if( $(e.target).attr("href")=="#schedules-viewer" && $(e.relatedTarget).attr("href")=="#subject-picker"){
+			if(must_recalculate_schedules){
+				must_recalculate_schedules = false;
+				worker_generate_schedules();
+			}
+			else
+				worker_filter_schedules();		
 		}
 	});
 
 	$("#filter-cleaner").click(function(){
 		$(".ui-selected").removeClass("ui-selected")
 	});
+
+	$("#button-prev-schedule").click(function(){
+		set_schedule_index(showed_schedule_index-1);		
+	});
+
+	$("#button-next-schedule").click(function(){
+		set_schedule_index(showed_schedule_index+1);
+	});
 	
     $("#schedule-table").selectable({
         filter: ".block",
         selected: function( event, ui ) {
-            var row = $(ui.selected).parents('tr').index(),
-                col = $(ui.selected).parents('td').index();
+        	var data, day, hour;
+        	data = $(ui.selected).attr("id").split("-");
+        	day = data[1];
+        	hour = data[2];
+            console.log("selected "+day+", "+hour);
         },
         unselected: function( event, ui ) {
             var row = $(ui.unselected).parents('tr').index(),
                 col = $(ui.unselected).parents('td').index();
         }
     });
-	
+
+	myHelloWorker.addEventListener("message", function (event) {
+		switch(event.data.command){
+			case FINISHED_FILTERING:
+				filtered_generated_schedules = event.data.filtered_generated_schedules;
+				// var schedule_it = new Iterator(event.data.filtered_generated_schedules);
+				// while (schedule_it.not_finished()){
+				// 	var schedule = schedule_it.next();
+				// 	filtered_generated_schedules.push(JSON.parse(schedule))	
+				// }
+				draw_filtered_schedules_alert();
+				set_schedule_index(showed_schedule_index);	
+				break;
+			case FINISHED_GENERATING:
+				generated_schedules = event.data.generated_schedules;
+				// var schedule_it = new Iterator(event.data.generated_schedules);
+				// while (schedule_it.not_finished()){
+				// 	var schedule = schedule_it.next();
+				// 	generated_schedules.push(JSON.parse(schedule))	
+				// }
+				worker_filter_schedules();
+				break;
+		}	
+	});	
 });
