@@ -11,7 +11,7 @@ selected_subjects = {};
 generated_schedules = [];
 filtered_generated_schedules = [];
 must_recalculate_schedules = false;
-myHelloWorker = new Worker('/task.js');
+myHelloWorker = new Worker('/worker.js');
 day_letter2day_word = a={M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
 day_word2day_letter = a={"lunes":"M", "martes":"T", "miercoles":"W", "jueves":"R", "viernes":"F", "sabado":"S"};
 
@@ -30,7 +30,9 @@ Iterator.prototype.next = function(){
 	return this.list[this.index++];
 }
 Iterator.prototype.not_finished = function(){
-	return (this.index < this.list.length);
+	if(this.list != undefined)
+		return (this.index < this.list.length);
+	return false;
 }
 
 // Functions related to selected subjects object
@@ -84,69 +86,16 @@ function delete_banned_hour(day, hour){
 		banned_hours.remove(banned_hours.indexOf(hour));
 }
 
-function hour_weight(hour){
-	switch(hour){
-		case 6: return 100;
-		case 7: return 66;
-		case 8: return 33;
-		case 9: return 0;
-		case 10: return 33;
-		case 11: return 66;
-		case 12: return 100;
-		case 13: return 100;
-		case 14: return 0;
-		case 15: return 20;
-		case 16: return 40;
-		case 17: return 60;
-		case 18: return 80;
-		case 19: return 100;
-	}
+function subject_codes() {
+    var codes = [];
+    var patt = new RegExp("[a-zA-Z]{3}[0-9]{4}");
+    for (var code in selected_subjects){
+        var res = patt.test(code);
+        if(res)
+            codes.push(code);
+    }
+    return codes;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Functions related to course instances
-function course_weight(course){
-	var weight=0, hour, hours, day, it;
-	for(day in course.schedule){
-		hours = course.schedule[day];
-		it = new Iterator(hours);
-		while(it.not_finished()){
-			hour=it.next()
-			weight = weight + hour_weight(hour);
-		}
-	}
-	return weight;
-}
-
-function course_conflict(course, other) {
-	var conflict=false, day, it, hour;
-	for(day in course.schedule){
-		if(other.schedule[day] !== undefined){
-			it = new Iterator(course.schedule[day]);
-			while(it.not_finished()){
-				hour=it.next();
-				if(other.schedule[day].indexOf(hour)!=-1)
-					conflict = true;
-			}
-		}
-	}
-	return conflict;
-}
-
-function subject_codes(){
-	var codes=[];
-	for(var code in selected_subjects)
-		codes.push(code);
-	return codes;
-}
-
-function sort_subjects_courses(){
-	var subject_code;
-	for(subject_code in selected_subjects){
-		selected_subjects[subject_code].courses.sort(function(a, b){return course_weight(a)-course_weight(b)});
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Worker comunication related functions
 function worker_generate_schedules(){
@@ -172,7 +121,6 @@ function worker_filter_schedules(){
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Graphical interface related functions
 function show_wait_gif(){
@@ -185,6 +133,7 @@ function hide_wait_gif(){
 
 function draw_schedule(schedule){
 	$("#schedule-table td").text("");
+	$("#schedule-info").html("");
 	var it=new Iterator(schedule);
 	while(it.not_finished()){
 		var course = it.next();
@@ -195,6 +144,28 @@ function draw_schedule(schedule){
 				$("#cell-"+day_letter2day_word[day]+"-"+hour).text(course.name);
 			}
 		}
+		$("#schedule-info").append('<div class="panel panel-default course-data">'+
+										'<p class="course-name">'+course.name+'</p>'+
+										'<p>nrc:'+course.nrc+'&nbsp;|&nbsp;cupos:'+course.available+'</p>'+
+										'<p>'+course.lecture_teachers+'</p>'+
+									'</div>');
+
+
+
+									// <div class="col-md-2">'+
+									// 	'<div class="panel panel-default">'+
+									// 		'<div class="panel-heading">'+
+									// 			'<h5>'+course.name+'</h5>'+
+									// 		'</div>'+
+									// 		'<div class="panel-body">'+
+									// 			'<ul class="list-group">'+
+									// 				'<li class="list-group-item">Profesores: '+course.lecture_teachers+'</li>'+
+									// 				'<li class="list-group-item">NRC: '+course.nrc+'</li>'+
+									// 				'<li class="list-group-item">cupos: '+course.available+'</li>'+
+									// 			'</ul>'+
+									// 		'</div>'+
+									// 	'</div>'+
+									// '</div>');
 	}
 }
 
@@ -371,7 +342,6 @@ $(function(){
 				    		add_subject(data);
 				    		create_subject_panel(data);
 				    		hide_wait_gif()
-				    		sort_subjects_courses();			    			
 			    		}			    		
 			    	}, "json");	
 		    	}
@@ -392,12 +362,15 @@ $(function(){
 		}
 	});
 
+
 	$("#filter-cleaner").click(function(){
+		selected_subjects.banned_hours = undefined;
 		$(".ui-selected").removeClass("ui-selected")
+		worker_filter_schedules();
 	});
 
 	$("#button-prev-schedule").click(function(){
-		set_schedule_index(showed_schedule_index-1);		
+		set_schedule_index(showed_schedule_index-1);
 	});
 
 	$("#button-next-schedule").click(function(){
@@ -409,13 +382,20 @@ $(function(){
         selected: function( event, ui ) {
         	var data, day, hour;
         	data = $(ui.selected).attr("id").split("-");
-        	day = data[1];
+        	day = day_word2day_letter[data[1]];
         	hour = data[2];
-            console.log("selected "+day+", "+hour);
+        	add_banned_hour(day, hour);
         },
         unselected: function( event, ui ) {
-            var row = $(ui.unselected).parents('tr').index(),
-                col = $(ui.unselected).parents('td').index();
+			var data, day, hour;
+            data = $(ui.unselected).attr("id").split("-");
+           	day = day_word2day_letter[data[1]];
+        	hour = data[2];
+        	while( is_banned_hour(day, hour) )
+        		delete_banned_hour(day, hour);
+        },
+        stop: function( event, ui ) {
+        	worker_filter_schedules();
         }
     });
 
@@ -423,22 +403,12 @@ $(function(){
 		switch(event.data.command){
 			case FINISHED_FILTERING:
 				filtered_generated_schedules = event.data.filtered_generated_schedules;
-				// var schedule_it = new Iterator(event.data.filtered_generated_schedules);
-				// while (schedule_it.not_finished()){
-				// 	var schedule = schedule_it.next();
-				// 	filtered_generated_schedules.push(JSON.parse(schedule))	
-				// }
 				draw_filtered_schedules_alert();
 				set_schedule_index(showed_schedule_index);	
 				break;
 			case FINISHED_GENERATING:
 				generated_schedules = event.data.generated_schedules;
-				// var schedule_it = new Iterator(event.data.generated_schedules);
-				// while (schedule_it.not_finished()){
-				// 	var schedule = schedule_it.next();
-				// 	generated_schedules.push(JSON.parse(schedule))	
-				// }
-				worker_filter_schedules();
+			 	worker_filter_schedules();
 				break;
 		}	
 	});	

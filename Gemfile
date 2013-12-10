@@ -1,10 +1,16 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
 gem 'typhoeus'
 gem 'nokogiri'
 gem 'jquery-rails'
 gem 'rails', '3.2.15'
 gem 'jquery-ui-rails'
+
+group :production do
+	gem 'pg'
+	gem "unicorn", "~> 4.6.2"
+end
 
 group :development do
 	gem 'sqlite3'
