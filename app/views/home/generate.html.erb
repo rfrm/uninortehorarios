@@ -2,22 +2,61 @@
 	<div class="row">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#subject-picker" data-toggle="tab">Seleccionar materias</a></li>
-		  	<li><a href="#hour-filter" data-toggle="tab">Filtro de horas</a></li>
-		  	<li><a href="#schedule-viewer" data-toggle="tab">Visor de horarios</a></li>
+		  	<li><a href="#schedules-viewer" data-toggle="tab">Visor de horarios</a></li>
+		  	<li><a href="#selected-schedules" data-toggle="tab">Horarios favoritos</a></li>
+		  	<li><a href="#help-tab" data-toggle="tab">¿Cómo lo uso?</a></li>
 		</ul>
 		<div class="tab-content" style="padding:20px">
 			<div id="subject-picker" class="tab-pane fade in active">
-				<%= text_field_tag 'subject_code', nil, placeholder: 'Escribe el nombre o código de una materia', size: 50, class: "form-control" %>			
+				<div class="row">
+					<div class="col-sm-6">
+					<%= text_field_tag 'subject_code', nil, placeholder: 'Escribe el nombre o código de una materia', size: 50, class: "form-control" %>
+					</div>				
+					<div class="col-sm-1">
+						<div class="wait">					
+						</div>					
+					</div>					
+				</div>
+				<hr>				
 				<div id="subject-wrapper" class="row">
 				</div>
 			</div>
 			
-			<div id="hour-filter" class="tab-pane fade">
-				2
+			<div id="schedules-viewer" class="tab-pane fade">
+				<div id="alert-wrapper" class="row">
+					<div id="alert" class="alert alert-info alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						<p>Puedes filtrar varios bloques usando la tecla Ctrl, haciendo click izquierdo y moviendo el mouse.</p>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table id="schedule-table" class="table table-bordered table-condensed">
+					</table>
+				</div>
+				<div class="row">
+					<button id="filter-cleaner" class="btn btn-danger btn-block btn-lg">Limpiar filtro</button>
+				</div>
 			</div>
 
-			<div id="schedule-viewer" class="tab-pane fade">
-				3
+			<div id="selected-schedules" class="tab-pane fade">
+				<div class="row">
+					<h1>Horarios generados: <span id="schedule-count">0</span></h1>
+				</div>
+				<div class="row">
+
+					<div class="col-sm-6">
+						<button id="generate-schedules" class="btn btn-lg btn-primary btn-block">Generar horarios</button>
+					</div>				
+					<div class="col-sm-1">
+						<div class="wait"></div>					
+					</div>					
+				</div>
+				
+				<div class="row" id="worker-output">
+				</div>
+			</div>
+
+			<div id="help-tab" class="tab-pane fade">
 			</div>
 		</div>
 	</div>	

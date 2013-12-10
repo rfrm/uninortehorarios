@@ -1,27 +1,15 @@
-// var myHelloWorker = new Worker('/task.js');
-// myHelloWorker.addEventListener("message", function (event) {
-//   	document.getElementById("output").textContent = event.data;
-// }, false);
-
-// myHelloWorker.postMessage("David");
-// // myHelloWorker.terminate();
+UPDATE_COUNT = 0
+FINISHED = 1
+NEW_SCHEDULE = 2
+                  
+var myHelloWorker = new Worker('/task.js');
+var day_word = a={M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
 
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 };
-
-function clone(obj){
-    if(obj == null || typeof(obj) != 'object')
-        return obj;
-
-    var temp = obj.constructor(); // changed
-
-    for(var key in obj)
-        temp[key] = clone(obj[key]);
-    return temp;
-}
 
 function Iterator(l){
 	this.index = 0;
@@ -32,6 +20,9 @@ Iterator.prototype.next = function(){
 }
 Iterator.prototype.not_finished = function(){
 	return (this.index < this.list.length);
+}
+Iterator.prototype.get_current = function(){
+	return this.list[this.index];
 }
 
 var selected_subjects = {};
@@ -45,7 +36,7 @@ function is_selected(subject_code){
 	selected_subjects[subject_code] != undefined;
 }
 function add_banned_teacher(subject_code, teacher){
-	if(selected_subjects[subject_code].banned_teachers == undefined){
+	if(selected_subjects[subject_code].banned_teachers === undefined){
 		selected_subjects[subject_code].banned_teachers = [teacher];
 	}
 	else{
@@ -56,7 +47,6 @@ function delete_banned_teacher(subject_code, teacher){
 	var index = selected_subjects[subject_code].banned_teachers.indexOf(teacher);
 	selected_subjects[subject_code].banned_teachers.remove(index);
 }
-
 
 function hour_weight(hour){
 	switch(hour){
@@ -93,7 +83,7 @@ function course_weight(course){
 function course_conflict(course, other) {
 	var conflict=false, day, it, hour;
 	for(day in course.schedule){
-		if(other.schedule[day] != undefined){
+		if(other.schedule[day] !== undefined){
 			it = new Iterator(course.schedule[day]);
 			while(it.not_finished()){
 				hour=it.next();
@@ -107,46 +97,33 @@ function course_conflict(course, other) {
 
 function subject_codes(){
 	var codes=[];
-	for(code in selected_subjects)
+	for(var code in selected_subjects)
 		codes.push(code);
-	return codes
+	return codes;
 }
 
 var count=0;
 var generated_schedules = [];
-function generate(subject_codes, level, schedule){	
-	if(level < subject_codes.length){
-		var subject_code = subject_codes[level];
-		var courses = selected_subjects[subject_code].courses;
-		var it = new Iterator(courses);
-
-		while(it.not_finished()){
-			count++;
-			var course=it.next()
-			var add = true;
-			var course_it = new Iterator(schedule);
-			while(course_it.not_finished()){
-				var schedule_course=course_it.next();
-				if(course_conflict(course, schedule_course))
-					add=false;
-			}
-			if(add){
-				schedule.push(course);
-				generate(subject_codes, level+1, schedule);
-				schedule.pop();
-			}
-		}
-	}
-	else{
-		if(schedule.length == subject_codes.length)
-			generated_schedules.push(clone(schedule));
-	}
-}
 
 function sort_subjects_courses(){
 	var subject_code;
 	for(subject_code in selected_subjects){
 		selected_subjects[subject_code].courses.sort(function(a, b){return course_weight(a)-course_weight(b)});
+	}
+}
+
+function draw_schedule(schedule){
+	$("#schedule-table td").text("");
+	var it=new Iterator(schedule);
+	while(it.not_finished()){
+		var course = it.next();
+		for(var day in course.schedule){
+			var hour_it = new Iterator(course.schedule[day]);
+			while(hour_it.not_finished()){
+				var hour = hour_it.next();
+				$("#cell-"+day_word[day]+"-"+hour).text(course.name);
+			}
+		}
 	}
 }
 
@@ -174,8 +151,7 @@ function show_subject_panel(subject_data) {
 		$teacher_row.find("button").tooltip();
 		$teacher_row.find("button").click(function(){
 			var teacher_name = $(this).parent().siblings().children().text();					
-			if($(this).attr('data-original-title') == "Bloquear"){				
-
+			if($(this).attr('data-original-title') == "Bloquear"){
 				// Update UI
 				$(this).attr('data-original-title', "Desbloquear");
 				$(this).find('span').css('color', 'red');
@@ -215,6 +191,35 @@ function show_subject_panel(subject_data) {
 	$col.slideDown(500);	
 }
 
+function initialize_schedule_table(){
+	var mousedown = false;
+	var $table = $("#schedule-table");
+	var titles = ["Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+	var days = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+
+	// Create titles
+	var $table_header = $("<tr>");
+	var it = new Iterator(titles);
+	while(it.not_finished()){
+		$table_header.append($("<th>").text(it.next()));
+	}
+	$table.append($table_header);
+
+	//Create table body
+	for(var hour=6;hour<20;hour++){
+		var $table_row = $("<tr>");
+
+		//Add hour
+		$table_row.append($("<th>").text(hour+":30-"+(hour+1)+":29"));
+		it = new Iterator(days);
+		while(it.not_finished()){
+			var day = it.next();
+			$table_row.append($('<td id="cell-'+day+'-'+hour+'" class="block">'));
+		}
+		$table.append($table_row);
+	}
+}
+
 $(function(){
 	$.getJSON('/subject/autocomplete').done(function(data){
 		$('#subject_code').autocomplete({
@@ -223,7 +228,9 @@ $(function(){
 		    	var subject_code = selection.data;
 		    	if( !is_selected(subject_code) ){
 		    		$(this).val(""); //Clear textfield		    				    		
+		    		$(".wait").addClass("waiting");
 			    	$.post("/subject/courses", {subject_code: subject_code}, function(data) {
+						$(".wait").removeClass("waiting");
 			    		add_subject(data);
 			    		sort_subjects_courses();			    		
 			    		show_subject_panel(data);
@@ -231,5 +238,53 @@ $(function(){
 		    	}
 		    }
 		});
-	})	
+	})
+
+	initialize_schedule_table();
+
+	$("#generate-schedules").click(function(){
+		generated_schedules = []
+		$(".wait").addClass("waiting");
+		myHelloWorker.postMessage(selected_subjects);
+	});
+	
+	
+
+	myHelloWorker.addEventListener("message", function (event) {
+		switch(event.data.command){
+			case UPDATE_COUNT:
+				$("#schedule-count").text(event.data.count);
+				break;
+			case FINISHED:
+				$(".wait").removeClass("waiting");
+				break;
+			case NEW_SCHEDULE:
+				generated_schedules.push(event.data.schedule);
+				break;
+		}	
+	});
+	
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		if( $(e.target).attr("href")=="#schedules-viewer" &&
+			$(e.relatedTarget).attr("href")=="#subject-picker"){
+				
+		}
+	});
+
+	$("#filter-cleaner").click(function(){
+		$(".ui-selected").removeClass("ui-selected")
+	});
+	
+    $("#schedule-table").selectable({
+        filter: ".block",
+        selected: function( event, ui ) {
+            var row = $(ui.selected).parents('tr').index(),
+                col = $(ui.selected).parents('td').index();
+        },
+        unselected: function( event, ui ) {
+            var row = $(ui.unselected).parents('tr').index(),
+                col = $(ui.unselected).parents('td').index();
+        }
+    });
+	
 });
