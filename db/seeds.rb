@@ -11,7 +11,7 @@ hydra = Typhoeus::Hydra.new(max_concurrency: 10)
 
 subjects = Set.new
 codes.each_with_index do |code, index| 
-	request = Typhoeus::Request.new("http://guayacan.uninorte.edu.co/registro/resultado_codigo.asp", method: :post, body: {mat: code, BtnCurso: "Buscar", datos_periodo: "201410", nom_periodo: "Primer Semestre 2014"})
+	request = Typhoeus::Request.new("http://guayacan.uninorte.edu.co/registro/resultado_codigo.asp", method: :post, body: {valida: "OK", mat: code, BtnCurso: "Buscar", datos_periodo: "201410", nom_periodo: "Primer Semestre 2014"})
 	request.on_complete do |response|
 		puts "Worker#{index} done!"
 		doc = Nokogiri::HTML(response.body)
