@@ -328,11 +328,11 @@ $(function(){
 		    		show_wait_gif();	    	
 		    		$(this).val(""); //Clear textfield			    		
 			    	$.post("/subject/courses", {subject_code: subject_code}, function(data) {
-			    		if( data.error !== undefined){
+			    		if( data.error_message !== undefined){
 			    			$("#subject-wrapper").prepend(
 								'<div class="alert alert-danger alert-dismissable">'+
 								  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-								  'Hay problemas para contactar el servidor de la Universidad. Inténtalo de nuevo.'+
+								  data.error_message+
 								'</div>'
 			    			);
 			    			hide_wait_gif()
