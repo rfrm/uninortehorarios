@@ -311,7 +311,7 @@ $(function(){
 		    onSelect: function (selection) {
 		    	var subject_code = selection.data;
 		    	if( !is_selected(subject_code) ){
-		    		show_wait_gif();	    	
+		    		show_wait_gif();
 		    		$(this).val(""); //Clear textfield			    		
 			    	$.post("/subject/courses", {subject_code: subject_code}, function(data) {
 			    		if( data.error_message !== undefined){
@@ -323,8 +323,7 @@ $(function(){
 			    			);
 			    			hide_wait_gif()
 			    		}
-			    		else{
-			    			
+			    		else{			    			
 				    		add_subject(data);
 				    		create_subject_panel(data);
 				    		hide_wait_gif()
