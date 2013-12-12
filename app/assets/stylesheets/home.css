@@ -1,8 +1,5 @@
-@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
-
 body{
 	margin-top: 5px;
-	font-family: 'Karla', sans-serif;
 }
 
 th{
@@ -27,10 +24,6 @@ th{
 #subject-wrapper{
 	margin-top: 20px;
 }
-
-/*#schedule-selector-wrapper{
-	margin-bottom: 15px;
-}*/
 
 #schedule-table th{
 	/*font-size: 9px;*/
@@ -74,15 +67,8 @@ th{
 }
 
 .course-data{
-	border-color: #ddd;	
-	width: 15%;
 	height: 90px;
-	margin: 0 5px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
 	text-align: center;
-	float: left;
 }
 
 .course-data p{
@@ -105,10 +91,6 @@ th{
 	vertical-align: middle !important;
 }
 
-/*.glyphicon.glyphicon-minus-sign{
-	
-}*/
-
 .list-group{
 	margin-bottom: 0;
 }
@@ -120,10 +102,6 @@ th{
 .panel-heading h5{
 	margin-top: 0;
 	margin-bottom: 0;
-}
-
-#schedule-info{
-	height: 90px;
 }
 
 .tachado{

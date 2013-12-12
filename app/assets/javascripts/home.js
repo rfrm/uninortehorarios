@@ -5,6 +5,7 @@ FINISHED_GENERATING = 3;
 FINISHED_FILTERING = 4;
 
 // Global variables
+allow_full = false;
 worker_busy = false;
 showed_schedule_index = 0;
 selected_subjects = {};
@@ -114,7 +115,7 @@ function worker_filter_schedules(){
 		show_wait_gif()
 		draw_filtering_alert();
 		showed_schedule_index = 0;
-		myHelloWorker.postMessage({command: FILTER, selected_subjects: selected_subjects, generated_schedules: generated_schedules});		
+		myHelloWorker.postMessage({command: FILTER, selected_subjects: selected_subjects, generated_schedules: generated_schedules, allow_full: allow_full});
 	}
 	else{
 		draw_no_subject_alert();
@@ -144,28 +145,13 @@ function draw_schedule(schedule){
 				$("#cell-"+day_letter2day_word[day]+"-"+hour).text(course.name);
 			}
 		}
-		$("#schedule-info").append('<div class="panel panel-default course-data">'+
-										'<p class="course-name">'+course.name+'</p>'+
-										'<p>nrc:'+course.nrc+'&nbsp;|&nbsp;cupos:'+course.available+'</p>'+
-										'<p>'+course.lecture_teachers+'</p>'+
+		$("#schedule-info").append('<div class="col-md-2">'+
+										'<div class="panel panel-default course-data">'+
+											'<p class="course-name">'+course.name+'</p>'+
+											'<p>nrc:'+course.nrc+'&nbsp;|&nbsp;cupos:'+course.available+'</p>'+
+											'<p>'+course.lecture_teachers+'</p>'+
+										'</div>'+
 									'</div>');
-
-
-
-									// <div class="col-md-2">'+
-									// 	'<div class="panel panel-default">'+
-									// 		'<div class="panel-heading">'+
-									// 			'<h5>'+course.name+'</h5>'+
-									// 		'</div>'+
-									// 		'<div class="panel-body">'+
-									// 			'<ul class="list-group">'+
-									// 				'<li class="list-group-item">Profesores: '+course.lecture_teachers+'</li>'+
-									// 				'<li class="list-group-item">NRC: '+course.nrc+'</li>'+
-									// 				'<li class="list-group-item">cupos: '+course.available+'</li>'+
-									// 			'</ul>'+
-									// 		'</div>'+
-									// 	'</div>'+
-									// '</div>');
 	}
 }
 
@@ -362,7 +348,6 @@ $(function(){
 		}
 	});
 
-
 	$("#filter-cleaner").click(function(){
 		selected_subjects.banned_hours = undefined;
 		$(".ui-selected").removeClass("ui-selected")
@@ -398,6 +383,11 @@ $(function(){
         	worker_filter_schedules();
         }
     });
+
+    $("#allow_full").click(function(){
+    	allow_full = $(this).find("[type=checkbox]").prop("checked");
+    	worker_filter_schedules();
+    })
 
 	myHelloWorker.addEventListener("message", function (event) {
 		switch(event.data.command){

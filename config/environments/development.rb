@@ -34,4 +34,9 @@ Uninortehorarios::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  # config.serve_static_assets = true
+  # config.assets.compress = true
+  # config.assets.compile = true
+  # config.assets.digest = true
 end

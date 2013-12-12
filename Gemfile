@@ -10,6 +10,8 @@ gem 'jquery-ui-rails'
 group :production do
 	gem 'pg'
 	gem "unicorn", "~> 4.6.2"
+	gem 'heroku-deflater'
+	gem 'rails_12factor'
 end
 
 group :development do

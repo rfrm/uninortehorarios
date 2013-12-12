@@ -148,7 +148,7 @@ function generate(subject_codes, level, schedule) {
 
 filtered_generated_schedules = [];
 
-function filter_generated_schedules(generated_schedules) {
+function filter_generated_schedules(generated_schedules, allow_full) {
     filtered_generated_schedules = [];
     var schedule_iterator = new Iterator(generated_schedules);
     while (schedule_iterator.not_finished()) {
@@ -164,6 +164,10 @@ function filter_generated_schedules(generated_schedules) {
                 var subject_banned_teachers = selected_subjects[course.mat].banned_teachers;
                 if (subject_banned_teachers.indexOf(course.lecture_teachers) != -1) add = false;
             }
+
+            // Filter if there is no course available
+            if(!allow_full && course.available<1)
+                add = false;
         }
         if (add) {
             // Fiter by banned hour
@@ -200,7 +204,8 @@ self.addEventListener('message', function (event) {
             break;
         case FILTER:
             generated_schedules = event.data.generated_schedules;
-            filter_generated_schedules(generated_schedules);
+            allow_full = event.data.allow_full
+            filter_generated_schedules(generated_schedules, allow_full);
             self.postMessage({
                 command: FINISHED_FILTERING,
                 filtered_generated_schedules: filtered_generated_schedules
