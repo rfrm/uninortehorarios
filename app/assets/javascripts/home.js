@@ -13,8 +13,10 @@ generated_schedules = [];
 filtered_generated_schedules = [];
 must_recalculate_schedules = false;
 myHelloWorker = new Worker('/worker.js');
-day_letter2day_word = a={M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
-day_word2day_letter = a={"lunes":"M", "martes":"T", "miercoles":"W", "jueves":"R", "viernes":"F", "sabado":"S"};
+day_letter2day_word = {M:"lunes", T:"martes", W:"miercoles", R:"jueves", F:"viernes", S:"sabado"};
+day_word2day_letter = {"lunes":"M", "martes":"T", "miercoles":"W", "jueves":"R", "viernes":"F", "sabado":"S"};
+days=["M","T","W","R","F","S"];
+titles = ["Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
@@ -267,7 +269,7 @@ function draw_filtered_schedules_alert(){
 function draw_schedule_table(){
 	var mousedown = false;
 	var $table = $("#schedule-table");
-	var titles = ["Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+	
 	var days = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
 
 	// Create titles
@@ -294,14 +296,59 @@ function draw_schedule_table(){
 }
 
 function generate_PDF(){
-	var doc = new jsPDF();
-	var schedule = $("#schedules-viewer").get(0);
+	var schedule = filtered_generated_schedules[showed_schedule_index];
 
-	doc.fromHTML(schedule, 15, 15, {
-        'width': 170 
-	});
+	var doc = new jsPDF('l');
+	doc.rect(5, 5, 287, 85, {});
+	
+	// Draw headers
+	doc.setFontSize(12);
+	var x=5, y=20;
+	doc.text(x, y, "Hora");
+	doc.lines([[287, 0]], 5, y);
+	x=20;
+	for(var i=1;i<titles.length;i++){			
+		doc.text(x+1, y-1, titles[i]);
+		x+=45.6;
+	}   	
 
-	doc.save('test.pdf')
+	doc.setFontSize(7);
+
+	var hour, day;
+	y=25;
+	for(hour=6;hour<20;hour++){
+		// Write hour
+		x=5;
+		doc.text(x, y, hour+":30-"+(hour+1)+":29");
+		x=20;
+
+		for(var day_index=0;day_index<days.length;day_index++){
+			var day = days[day_index];			
+			var course_iterator = new Iterator(schedule);
+			while(course_iterator.not_finished()){
+				var course = course_iterator.next();
+				if(course.schedule[day] !== undefined && course.schedule[day].indexOf(hour)!=-1){					
+			    	doc.text(x+1, y-1, course.name);
+			    	break;
+				}
+			}
+			doc.lines([[0, 85]], x, 5);
+			x += 45.6;
+		}
+		doc.lines([[287, 0]], 5, y);
+		y+=5;
+	}
+
+	x=10; y+=5;
+	doc.setFontSize(14);
+	var course_iterator = new Iterator(schedule);
+	while(course_iterator.not_finished()){
+		var course = course_iterator.next();
+		doc.text(x, y, course.name+"|"+course.lecture_teachers+"|"+course.nrc);
+		y+=5;
+	}
+
+	doc.save("test.pdf");
 }
 
 $(function(){
@@ -399,17 +446,7 @@ $(function(){
     })
 
     $("#save-as-pdf").click(function(){
-
-    	// "FRA4- SOCIETE ET COMMUN INTERC"
-
-
-    	var doc = new jsPDF('l');
-
-    	// doc.setFontSize(20);doc.text(0, 20, "Electrónica I");
-    	doc.rect(10, 10, 277, 190, {});
-    	// for(var x=37.2;x<287;x=x+27.2)
-    	// 	doc.lines([[0, 277]], x, 10);
-		doc.save("test.pdf");
+		generate_PDF();
     })
 
 	myHelloWorker.addEventListener("message", function (event) {
