@@ -48,7 +48,7 @@ function delete_subject(subject_code){
 }
 
 function is_selected(subject_code){
-	selected_subjects[subject_code] != undefined;
+	return selected_subjects[subject_code] != undefined;
 }
 
 function add_banned_teacher(subject_code, teacher){
