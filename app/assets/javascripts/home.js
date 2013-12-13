@@ -398,9 +398,10 @@ $(function(){
 			if(must_recalculate_schedules){
 				must_recalculate_schedules = false;
 				worker_generate_schedules();
+				ga('send', 'event', 'tab', 'generate_schedules', 'tab');
 			}
 			else
-				worker_filter_schedules();		
+				worker_filter_schedules();	
 		}
 	});
 
