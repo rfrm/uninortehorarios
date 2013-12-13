@@ -293,6 +293,17 @@ function draw_schedule_table(){
 	}
 }
 
+function generate_PDF(){
+	var doc = new jsPDF();
+	var schedule = $("#schedules-viewer").get(0);
+
+	doc.fromHTML(schedule, 15, 15, {
+        'width': 170 
+	});
+
+	doc.save('test.pdf')
+}
+
 $(function(){
 
 	/* If I don't do this, the ajax indicator gif is not displayed 
@@ -302,7 +313,6 @@ $(function(){
 		hide_wait_gif();	
 	}, 50);
 	
-
 	/* This gets the course list from the server and feeds it to the 
 	   autocomplete plugin*/
 	$.getJSON('/subject/autocomplete').done(function(data){
@@ -386,6 +396,20 @@ $(function(){
     $("#allow_full").click(function(){
     	allow_full = $(this).find("[type=checkbox]").prop("checked");
     	worker_filter_schedules();
+    })
+
+    $("#save-as-pdf").click(function(){
+
+    	// "FRA4- SOCIETE ET COMMUN INTERC"
+
+
+    	var doc = new jsPDF('l');
+
+    	// doc.setFontSize(20);doc.text(0, 20, "Electrónica I");
+    	doc.rect(10, 10, 277, 190, {});
+    	// for(var x=37.2;x<287;x=x+27.2)
+    	// 	doc.lines([[0, 277]], x, 10);
+		doc.save("test.pdf");
     })
 
 	myHelloWorker.addEventListener("message", function (event) {

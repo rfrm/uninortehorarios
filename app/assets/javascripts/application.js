@@ -14,4 +14,6 @@
 //= require jquery.ui.selectable
 //= require jquery.autocomplete
 //= require bootstrap.min
+//= require FileSaver.min
+//= require jspdf
 //= require_tree .
