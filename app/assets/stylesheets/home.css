@@ -86,6 +86,11 @@ th{
 	margin-bottom: 0px;
 }
 
+.fb-share-button{
+	float: right;
+	margin-top: 7px;
+}
+
 .glyphicon{
 	font-size: 20px;
 	vertical-align: middle !important;
