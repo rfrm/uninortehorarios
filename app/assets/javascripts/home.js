@@ -446,6 +446,7 @@ $(function(){
     })
 
     $("#save-as-pdf").click(function(){
+    	ga('send', 'event', 'button', 'generate_pdf', 'button');
 		generate_PDF();
     })
 
