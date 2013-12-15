@@ -304,7 +304,7 @@ function generate_PDF(){
 	// Draw headers
 	doc.setFontSize(12);
 	var x=5, y=20;
-	doc.text(x, y, "Hora");
+	doc.text(x+1, y-1, "Hora");
 	doc.lines([[287, 0]], 5, y);
 	x=20;
 	for(var i=1;i<titles.length;i++){			
@@ -319,7 +319,7 @@ function generate_PDF(){
 	for(hour=6;hour<20;hour++){
 		// Write hour
 		x=5;
-		doc.text(x, y, hour+":30-"+(hour+1)+":29");
+		doc.text(x+1, y-1, hour+":30-"+(hour+1)+":29");
 		x=20;
 
 		for(var day_index=0;day_index<days.length;day_index++){
@@ -348,7 +348,7 @@ function generate_PDF(){
 		y+=5;
 	}
 
-	doc.save("test.pdf");
+	doc.save("horario.pdf");
 }
 
 $(function(){
