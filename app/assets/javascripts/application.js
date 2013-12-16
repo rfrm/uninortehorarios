@@ -3,3 +3,9 @@
 //= require jquery.autocomplete
 //= require bootstrap.min
 //= require twitter/bootstrap
+//= require home
+//= require ga
+//= require fcb
+//= require filesaver.min
+//= require jspdf
+//= require jspdf-standard_fonts_metrics
