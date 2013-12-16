@@ -7,5 +7,5 @@
 Uninortehorarios::Application.config.secret_token = if Rails.env.development? or Rails.env.test?
   ('x' * 30) # meets minimum requirement of 30 chars long
 else
-  ENV['SECRET_TOKEN']
+  "6dad7080335c2c3edd5174ee43042916b8abfc5577b8102fda0e7a896363"
 end
