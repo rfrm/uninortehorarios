@@ -12,7 +12,7 @@ end
 
 group :development do
   gem 'sqlite3'
-    gem 'meta_request'
+  gem 'meta_request'
 end
 
 group :assets do
