@@ -2,4 +2,9 @@
 //= require jquery.ui.selectable
 //= require jquery.autocomplete
 //= require bootstrap.min
-//= require_tree .
+//= require twitter/bootstrap/tooltip
+//= require home
+//= require fcb
+//= require filesaver.min
+//= require jspdf
+//= require jspdf-standard_fonts_metrics
