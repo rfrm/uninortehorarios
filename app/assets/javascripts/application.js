@@ -1,10 +1,9 @@
+//= require vendor/modernizr
 //= require jquery
-//= require jquery.ui.selectable
-//= require jquery.autocomplete
-//= require bootstrap.min
-//= require twitter/bootstrap/tooltip
-//= require home
-//= require fcb
-//= require filesaver.min
-//= require jspdf
-//= require jspdf-standard_fonts_metrics
+//= require foundation
+//= require underscore
+//= require backbone
+//= require react
+
+$(document).foundation();
+

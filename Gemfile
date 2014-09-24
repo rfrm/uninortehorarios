@@ -1,7 +1,14 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
 
 gem 'rails', '3.2.16'
+gem 'nokogiri'
+gem 'typhoeus'
+gem 'jbuilder'
+
+gem 'jquery-rails'
+gem 'foundation-rails'
+gem 'underscore-rails'
+gem 'react-rails', '~> 0.11.1.0'
 
 group :production do
   gem 'pg'
@@ -21,9 +28,3 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'therubyracer'
 end
-
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'less-rails-bootstrap'
-gem 'nokogiri'
-gem 'typhoeus'

@@ -39,4 +39,7 @@ Uninortehorarios::Application.configure do
   # config.assets.compress = true
   # config.assets.compile = true
   # config.assets.digest = true
+
+  config.react.variant = :development
+
 end
