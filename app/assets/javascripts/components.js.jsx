@@ -45,8 +45,9 @@ var SearchOption = React.createClass({
   },
   render: function() {
     return (
-      <li onClick={this.selected}>
+      <li onClick={this.selected} className="searchOption">
         ({this.props.code}) {this.props.name}
+        <i className="fi-plus hide">Agregar</i>
       </li>
     );
   }
@@ -84,7 +85,7 @@ var SearchOptionList = React.createClass({
     return (
       <div className="row">
         <div className="large-12 columns">
-          <ul ref="optionList">
+          <ul className="optionList" ref="optionList">
             {options}
           </ul>
         </div>

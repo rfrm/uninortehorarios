@@ -23,8 +23,8 @@ group :development do
 end
 
 group :assets do
-  gem 'less-rails'
+  gem 'sass-rails'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
-  gem 'therubyracer'
+  gem 'foundation-icons-sass-rails'
 end

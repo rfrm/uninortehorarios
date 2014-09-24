@@ -1,0 +1,16 @@
+/* 
+ *= require foundation
+ *= require_self
+ */
+
+ @import 'foundation-icons';
+
+.optionList {
+	list-style-type: none;
+}
+
+.searchOption:hover i {
+	display: inline-block;
+	position: absolute;
+	right: 15px;
+}
