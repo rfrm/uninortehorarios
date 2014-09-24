@@ -1,0 +1,6 @@
+<script type="text/javascript">
+  var subjectOptions = new Backbone.Collection;
+  subjectOptions.reset(<%= @subjects.to_json(only: [:name, :code]).html_safe %>);
+</script>
+
+<div id="searchBar"></div>

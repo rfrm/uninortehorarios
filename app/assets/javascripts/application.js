@@ -4,6 +4,7 @@
 //= require underscore
 //= require backbone
 //= require react
+//= require components
 
 $(document).foundation();
 
