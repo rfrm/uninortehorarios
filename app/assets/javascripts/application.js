@@ -8,3 +8,11 @@
 
 $(document).foundation();
 
+var TeacherOption = Backbone.Model.extend({
+    defaults: {
+        "banned": false
+    },
+    toggleBanned: function () {
+        this.set({"banned": !this.get("banned")});        
+    }
+});
