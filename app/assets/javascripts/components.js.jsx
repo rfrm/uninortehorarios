@@ -63,9 +63,7 @@ var SearchBarInput = React.createClass({
       <div className="row">
         <div className="large-12 columns">
           <form>
-            <label>
-              <input ref="searchInput" type="search" value={this.state.searchValue} onChange={this.handleChange} placeholder="Escribe el nombre o código de una materia" />
-            </label>
+            <input ref="searchInput" type="search" value={this.state.searchValue} onChange={this.handleChange} placeholder="Escribe el nombre o código de una materia" />
           </form>
         </div>
       </div>
@@ -111,7 +109,7 @@ var SearchOptionList = React.createClass({
     Backbone.on("SearchOption:selected", this.clear);
     Backbone.on("SearchBarInput:stop_writing", this.setOptions);
   },
-  render: function() {
+  render: function() {    
     var options = this.state.options.map( function(item, i){
       return <SearchOption name={item.get("name")} code={item.get("code")} key={i} />
     });
@@ -140,20 +138,16 @@ var SearchBar = React.createClass({
 });
 
 var TeacherOptionView = React.createClass({
-  mixins:[ModelMixin],
+  mixins:[ModelMixin, BindMixin],
   getBackboneModels: function(){
     return [this.props.instance]
   },
   render: function() {
-    var model = this.props.instance,
-        icon_class = model.get("banned") ? "fi-x medium" : "fi-check medium",
-        tooltip = model.get("banned") ? "Desbloquar" : "Bloquear";
+    var model = this.props.instance;
     return (
-      <div className="teacherOptionView" onClick={model.toggleBanned.bind(model)}>
-        <a  data-tooltip aria-haspopup="true" className="has-tip button tiny" title={tooltip}>
-          <i className={icon_class}></i>
-        </a>
-        {model.get("name")}        
+      <div className="row">
+        <input type="checkbox" checkedLink={this.bindTo(model, "banned")} />
+        {model.get("name")}
       </div>
     );
   }
@@ -167,4 +161,8 @@ $(function(){
 
   React.renderComponent(<SearchBar subjectOptions={subjectOptions} />, document.getElementById('searchBar'));
   React.renderComponent(<TeacherOptionView instance={libardo} />, document.getElementById('teacher'));
+
+  libardo.on("change", function(m){
+    console.log(m.attributes);
+  })
 });
