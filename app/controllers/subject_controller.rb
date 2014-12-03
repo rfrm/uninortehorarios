@@ -16,7 +16,7 @@ class SubjectController < ApplicationController
 		info_regex = /Materia: (?<mat>[A-Z]{3}[0-9]{4} - [0-9]{1,2}).+NRC: (?<nrc>[0-9]{4,5}).+Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/
 		pattern = /([a-zA-Z]{3})(\d{4})/
 		pattern =~ @subject_code
-		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: current_period, nom_periodo: current_period_name})
+		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: '201510', nom_periodo: 'Horarios Primer Semestre 2015'})
 		doc = Nokogiri::HTML(response.body)
 		tables = doc.css("table[cellpadding='0'][align='center']")
 
