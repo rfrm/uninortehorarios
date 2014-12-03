@@ -25,5 +25,4 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'less-rails-bootstrap'
-gem 'nokogiri'
-gem 'typhoeus'
+gem 'mechanize'
