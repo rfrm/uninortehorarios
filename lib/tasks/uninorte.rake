@@ -9,7 +9,7 @@ namespace :uninorte do
       Subject.update_all(active: false)
       Unscrapper::Subject.all.each do |subj_attrs|
         begin
-          subj = Subject.find_or_initialize_by(code: subj_attrs[:code])
+          subj = Subject.first_or_initialize(code: subj_attrs[:code])
           if subj.new_record?
             subj.assign_attributes(subj_attrs)
             subj.save!
