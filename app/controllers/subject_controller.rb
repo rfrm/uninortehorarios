@@ -5,7 +5,7 @@ require 'nokogiri'
 class SubjectController < ApplicationController
 
 	def autocomplete		
-		@subject_data = Subject.all.collect{|s| {value: "#{s.name} (#{s.code})", data: "#{s.code}"}}	
+		@subject_data = Subject.all.collect{|s| {value: "#{s.name.upcase} (#{s.code})", data: "#{s.code}"}}	
 		respond_to do |format|
     		format.json  { render :json => @subject_data }
     	end	  	
@@ -13,10 +13,10 @@ class SubjectController < ApplicationController
 
 	def courses
 		@subject_code = params[:subject_code]
-		info_regex = /Materia: (?<mat>[A-Z]{3}[0-9]{4} - [0-9]{1,2})NRC: (?<nrc>[0-9]{4}).+Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/	
+		info_regex = /Materia: (?<mat>[A-Z]{3}[0-9]{4} - [0-9]{1,2}).+NRC: (?<nrc>[0-9]{4,5}).+Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/
 		pattern = /([a-zA-Z]{3})(\d{4})/
 		pattern =~ @subject_code
-		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: "201430", nom_periodo: "Segundo Semestre 2014"})
+		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: current_period, nom_periodo: current_period_name})
 		doc = Nokogiri::HTML(response.body)
 		tables = doc.css("table[cellpadding='0'][align='center']")
 
@@ -36,7 +36,7 @@ class SubjectController < ApplicationController
 		    lecture_teachers = Set.new
 			lectures = table.css("tr td table tr")[1..-1]
 			lectures.each do |lecture|
-				start_date, end_date, days, hour, teacher, place = lecture.text.split("\r\n").map(&:strip)
+				start_date, end_date, days, hour, teacher, place = lecture.text.split("\r\n").map(&:strip).reject(&:empty?)
 				start_hour, end_hour = hour.strip.chomp.split(" - ")
 
 				#Process teacher name
@@ -85,4 +85,14 @@ class SubjectController < ApplicationController
 	  		end
 	  	end
 	end
+
+	private
+	def current_period
+    Time.now.year.to_s.concat(Time.now.month <= 5 ? '10' : '30')
+  end
+
+  def current_period_name
+    name = Time.now.month <= 5 ? 'Primer Semestre ' : 'Segundo Semestre '
+    name + current_period 
+  end
 end

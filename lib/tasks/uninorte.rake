@@ -5,14 +5,15 @@ namespace :uninorte do
   # Tasks
   desc 'Fetch uninorte subject list from uninorte webpage and update the db'
   task :subjects => :environment do
-    perflain 'fetching subjects...', 'done' do
+    perflain "fetching subjects...\n", '...done' do
       Subject.update_all(active: false)
       Unscrapper::Subject.all.each do |subj_attrs|
         begin
-          subj = Subject.first_or_initialize(code: subj_attrs[:code])
-          if subj.new_record?
-            subj.assign_attributes(subj_attrs)
+          subj = Subject.find_by_code(subj_attrs[:code])
+          unless subj
+            subj = Subject.new(subj_attrs)
             subj.save!
+            puts "- #{subj_attrs[:name]}"
           else
             subj.update(active: true) unless subj.active
           end

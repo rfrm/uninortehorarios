@@ -13,6 +13,7 @@ end
 group :development do
   gem 'sqlite3'
   gem 'meta_request'
+  gem 'quiet_assets'
 end
 
 group :assets do
@@ -26,3 +27,4 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'less-rails-bootstrap'
 gem 'mechanize'
+gem 'typhoeus'
