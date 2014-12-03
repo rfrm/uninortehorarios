@@ -5,10 +5,10 @@ require 'nokogiri'
 class SubjectController < ApplicationController
 
 	def autocomplete		
-		@subject_data = Subject.all.collect{|s| {value: "#{s.name.upcase} (#{s.code})", data: "#{s.code}"}}	
+		@subject_data = Subject.all.collect{|s| {value: "#{s.escaped_name.upcase} (#{s.code})", data: "#{s.code}"}}	
 		respond_to do |format|
-    		format.json  { render :json => @subject_data }
-    	end	  	
+  		format.json  { render :json => @subject_data }
+  	end 	
 	end
 
 	def courses
