@@ -18,9 +18,8 @@ module Unscrapper
       code_list.each do |code|
         response = $robot.post(courses_url, valida: 'OK', mat: code, BtnCodigo: 'Buscar', datos_periodo: current_period, nom_periodo: current_period_name).parser
         response.css("table[cellpadding='0'][cellspacing='0']").each do |course_html|
-          puts clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
+          clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
           course_info = info_regex.match(clean_course_info)
-          puts "---------------- #{course_info}"
           course = Hash[course_info.names.zip(course_info.captures)]
           course['subject_name'] = course_html.css('tr td b').text
           # course['professors'] = []
@@ -51,7 +50,16 @@ module Unscrapper
     end
 
     def self.current_period
-      Time.now.year.to_s.concat(Time.now.month <= 5 ? '10' : '30')
+      current_year, current_month = Time.now.year, Time.now.month
+      period_code = if current_month < 6
+        '10'
+      elsif current_month >= 6 && current_month < 12
+        '30'
+      elsif current_month == 12
+        current_year += 1
+        '10' 
+      end
+      "#{current_year}#{period_code}"
     end
 
     def self.current_period_name
