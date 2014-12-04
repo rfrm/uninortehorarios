@@ -18,7 +18,7 @@ module Unscrapper
       code_list.each do |code|
         response = $robot.post(courses_url, valida: 'OK', mat: code, BtnCodigo: 'Buscar', datos_periodo: '201510', nom_periodo: 'Horarios Primer Semestre 2015').parser
         response.css("table[cellpadding='0'][cellspacing='0']").each do |course_html|
-          clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
+          puts clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
           course_info = info_regex.match(clean_course_info)
           puts "---------------- #{course_info}"
           course = Hash[course_info.names.zip(course_info.captures)]
