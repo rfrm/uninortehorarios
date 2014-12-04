@@ -20,6 +20,7 @@ module Unscrapper
         response.css("table[cellpadding='0'][cellspacing='0']").each do |course_html|
           clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
           course_info = info_regex.match(clean_course_info)
+          puts "---------------- #{course_info}"
           course = Hash[course_info.names.zip(course_info.captures)]
           course['subject_name'] = course_html.css('tr td b').text
           # course['professors'] = []
