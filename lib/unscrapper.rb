@@ -14,9 +14,9 @@ module Unscrapper
     def self.all
       courses = []
       courses_url = 'http://guayacan.uninorte.edu.co/registro/resultado_codigo.asp'
-      info_regex = /Materia: (?<subject_code>[A-Z]{3}[0-9]{4} - [0-9]{1,2}).+NRC: (?<un_id>[0-9]{4,5}).+Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/
+      info_regex = /Materia: (?<subject_code>[A-Z]{3}[0-9]{4} - [0-9]{1,2}).*NRC: (?<un_id>[0-9]{4,5}).*Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/
       code_list.each do |code|
-        response = $robot.post(courses_url, valida: 'OK', mat: code, BtnCodigo: 'Buscar', datos_periodo: '201510', nom_periodo: 'Horarios Primer Semestre 2015').parser
+        response = $robot.post(courses_url, valida: 'OK', mat: code, BtnCodigo: 'Buscar', datos_periodo: current_period, nom_periodo: current_period_name).parser
         response.css("table[cellpadding='0'][cellspacing='0']").each do |course_html|
           puts clean_course_info = course_html.css('tr td p').text.gsub(/(\r|\n|\t)/, '')
           course_info = info_regex.match(clean_course_info)
@@ -55,6 +55,7 @@ module Unscrapper
     end
 
     def self.current_period_name
+      name = 'Horarios '
       name = Time.now.month <= 5 ? 'Primer Semestre ' : 'Segundo Semestre '
       name + current_period 
     end
