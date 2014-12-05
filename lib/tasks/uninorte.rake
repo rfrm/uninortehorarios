@@ -15,7 +15,10 @@ namespace :uninorte do
             subj.save!
             puts "- #{subj_attrs[:name]}"
           else
-            subj.update(active: true) unless subj.active
+            unless subj.active
+              subj.assign_attributes(active: true) 
+              subj.save!
+            end
           end
         rescue => e
           puts "------- #{subj_attrs[:name]} -----------"
