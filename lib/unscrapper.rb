@@ -74,10 +74,10 @@ module Unscrapper
     # Methods
     def self.all
       subjects = []
-      subjects_names = []
+      subjects_codes = []
       Course.all.each do |course|
-        unless subjects_names.include? course['subject_name']
-          subjects_names.push course['subject_name']
+        unless subjects_codes.include? course['subject_code']
+          subjects_codes.push course['subject_code']
           subject = { name: course['subject_name'], code: course['subject_code'].split(' - ')[0] }
           subjects.push subject
         end
