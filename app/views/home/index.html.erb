@@ -1,13 +1,14 @@
 <div class="container text-center">
 	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6 center-window">
+		<div class="col-sm-0 col-md-1"></div>
+		<div class="col-sm-12 col-md-10 center-window">
 			<%= image_tag 'logo.png' %>
-			<h1>Generador de horarios</h1>
-			<%= link_to 'Ir al generador', home_generate_path, class: 'btn btn-primary btn-lg goto' %>
+			<h1>Vida universitaria hecha simple</h1>
+			<%= link_to 'Horarios', home_generate_path, class: 'btn btn-primary btn-lg goto', style: "margin-right: 15px;" %>
+			<%= link_to 'Profesores', 'http://linku-docentes.bitballoon.com', class: 'btn btn-primary btn-lg goto', target: :blank %>
 			<div class="row">
 				<h2>Síguenos:</h2>
-				<a href="https://www.facebook.com/linkuacademics" target="_blank">
+				<a href="https://www.fb.me/projectrutu" target="_blank">
 					<%= image_tag "/assets/fcb.png" %>
 				</a>
 				<a href="https://twitter.com/linkuacademics">
@@ -15,6 +16,6 @@
 				</a>
 			</div>
 		</div>
-		<div class="col-md-3"></div>
+		<div class="col-sm-0 col-md-1"></div>
 	</div>
 </div>
