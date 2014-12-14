@@ -4,7 +4,6 @@
 //= require bootstrap.min
 //= require twitter/bootstrap/tooltip
 //= require home
-//= require fcb
 //= require filesaver.min
 //= require jspdf
 //= require jspdf-standard_fonts_metrics
