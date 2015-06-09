@@ -5,7 +5,7 @@ namespace :uninorte do
   # Tasks
   desc 'Fetch uninorte subject list from uninorte webpage and update the db'
   task :subjects => :environment do
-    perflain "fetching subjects...\n", '...done' do
+    perflain "fetching subjects...\n", 'done' do
       Subject.update_all(active: false)
       Unscrapper::Subject.all.each do |subj_attrs|
         begin

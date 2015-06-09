@@ -13,29 +13,27 @@ class SubjectController < ApplicationController
 
 	def courses
 		@subject_code = params[:subject_code]
-		info_regex = /Materia: (?<mat>[A-Z]{3}[0-9]{4} - [0-9]{1,2}).*NRC: (?<nrc>[0-9]{4,5}).*Matriculados: (?<used>[0-9]+)Cupos Disponibles: (?<available>[0-9]+)/
+		info_regex = /(?<name>.*)Materia:.*(?<mat>[A-Z]{3}[0-9]{4}).*Grupo: (?<group>[0-9]{1,3}).*NRC: (?<nrc>[0-9]{4,5}).*Matriculados: (?<used>[0-9]+).*Cupos Disponibles: (?<available>[0-9]+)/
 		pattern = /([a-zA-Z]{3})(\d{4})/
 		pattern =~ @subject_code
-		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: '201510', nom_periodo: 'Horarios Primer Semestre 2015'})
+		response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp", body: {valida: "OK", mat2: $1, curso: $2, BtnCurso: "Buscar", datos_periodo: '201530', nom_periodo: 'Horarios Primer Semestre 2015'})
 		doc = Nokogiri::HTML(response.body)
-		tables = doc.css("table[cellpadding='0'][align='center']")
+		tables = doc.css("div.div")
 
 		courses = []
 		subject_teachers = Set.new
 		tables.each do |table|
 			#Get basic course info
-		    name = table.css("tr td b").text
-		    info_text = table.css("tr td p").text.gsub(/(\r|\n|\t)/,"")
+		    info_text = table.css("p").text.gsub(/(\r|\n|\t)/,"")
 		    info = info_regex.match(info_text)
-		    info_hash = Hash[ info.names.zip( info.captures ) ]
-		    info_hash["mat"] = info_hash["mat"].split(" - ")[0]
-		    course = {"name" => name}.merge(info_hash)
+		    course = Hash[ info.names.zip( info.captures ) ]
+		    course.delete('group')
 
 		    # Get schedule from table
 		    schedule = {}
 		    lecture_teachers = Set.new
-			lectures = table.css("tr td table tr")[1..-1]
-			lectures.each do |lecture|
+				lectures = table.css("table tr")[1..-1]
+				lectures.each do |lecture|
 				start_date, end_date, days, hour, teacher, place = lecture.text.split("\r\n").map(&:strip).reject(&:empty?)
 				start_hour, end_hour = hour.strip.chomp.split(" - ")
 
@@ -88,10 +86,20 @@ class SubjectController < ApplicationController
 
 	private
 	def current_period
-    Time.now.year.to_s.concat(Time.now.month <= 5 ? '10' : '30')
+    current_year, current_month = Time.now.year, Time.now.month
+    period_code = if current_month < 6
+      '10'
+    elsif current_month >= 6 && current_month < 12
+      '30'
+    elsif current_month == 12
+      current_year += 1
+      '10' 
+    end
+    "#{current_year}#{period_code}"
   end
 
   def current_period_name
+    name = 'Horarios '
     name = Time.now.month <= 5 ? 'Primer Semestre ' : 'Segundo Semestre '
     name + current_period 
   end
