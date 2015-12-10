@@ -62,6 +62,7 @@ class SubjectsController < ApplicationController
       subject_teachers = courses.map{|h| h["lecture_teachers"]}.flatten.uniq.sort
 
       begin
+        expires_in 1.minute, :public => true
         render :json => {:name => courses[0]["name"], :mat => subject_code,
                          :subject_teachers => subject_teachers, :courses => courses }
       rescue Exception => e

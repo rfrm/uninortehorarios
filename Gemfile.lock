@@ -57,6 +57,7 @@ GEM
     coffee-script-source (1.10.0)
     columnize (0.9.0)
     commonjs (0.2.7)
+    dalli (2.7.4)
     debugger (1.6.8)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -93,6 +94,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    memcachier (0.0.2)
     meta_request (0.3.4)
       callsite (~> 0.0, >= 0.0.11)
       rack-contrib (~> 1.1)
@@ -175,17 +177,21 @@ PLATFORMS
 DEPENDENCIES
   celluloid
   coffee-rails (~> 3.2.1)
+  dalli
   debugger
   heroku-deflater
   jquery-rails
   jquery-ui-rails (~> 4.0.5)
+  kgio
   less-rails
   less-rails-bootstrap
+  memcachier
   meta_request
   newrelic_rpm
   nokogiri
   pg
   quiet_assets
+  rack-cache
   rails (= 3.2.16)
   rails_12factor
   sqlite3

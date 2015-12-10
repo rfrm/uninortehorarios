@@ -27,5 +27,8 @@ gem "jquery-ui-rails", "~> 4.0.5"
 gem 'less-rails-bootstrap'
 gem 'typhoeus'
 gem 'nokogiri'
-
 gem 'newrelic_rpm'
+gem 'rack-cache'
+gem 'dalli'
+gem 'kgio'
+gem "memcachier"
