@@ -1,2 +1,3 @@
 # Load Subjects
-Rake::Task['uninorte:subjects'].invoke
+Rake::Task['uninorte:load_subjects'].invoke
+

@@ -362,7 +362,7 @@ $(function(){
 	
 	/* This gets the course list from the server and feeds it to the 
 	   autocomplete plugin*/
-	$.getJSON('/subject/autocomplete').done(function(data){
+	$.getJSON('/subjects/autocomplete').done(function(data){
 		$('#subject_code').autocomplete({
 		    lookup: data,
 		    onSelect: function (selection) {
@@ -370,7 +370,7 @@ $(function(){
 		    	if( !is_selected(subject_code) ){
 		    		show_wait_gif();
 		    		$(this).val(""); //Clear textfield			    		
-			    	$.post("/subject/courses", {subject_code: subject_code}, function(data) {
+			    	$.get("/subjects/"+subject_code, function(data) {
 			    		if( data.error_message !== undefined){
 			    			$("#subject-wrapper").prepend(
 								'<div class="alert alert-danger alert-dismissable">'+

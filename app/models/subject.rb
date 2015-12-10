@@ -1,7 +1,7 @@
 # Encoding: utf-8
 class Subject < ActiveRecord::Base
   attr_accessible :code, :name, :active
-  
+
   # Validations
   validates :name, :code,  presence: true
   validates :code, uniqueness: true
@@ -11,8 +11,7 @@ class Subject < ActiveRecord::Base
 
   # Methods
   def format_attributes
-    self.name.downcase!
-    self.escaped_name = escape_attr(self.name)
+    self.name = escape_attr(self.name)
   end
 
   private
