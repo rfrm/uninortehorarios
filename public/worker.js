@@ -162,7 +162,9 @@ function filter_generated_schedules(generated_schedules, allow_full) {
             //Filter by teacher
             if (selected_subjects[course.mat].banned_teachers !== undefined) {
                 var subject_banned_teachers = selected_subjects[course.mat].banned_teachers;
-                if (subject_banned_teachers.indexOf(course.lecture_teachers) != -1) add = false;
+                for(var i=0;i<course.lecture_teachers.length;i++)
+                  if(subject_banned_teachers.indexOf(course.lecture_teachers[i]) != -1)
+                    add = false;
             }
 
             // Filter if there is no course available
