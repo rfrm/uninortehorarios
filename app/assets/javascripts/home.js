@@ -371,6 +371,7 @@ $(function(){
 		    		show_wait_gif();
 		    		$(this).val(""); //Clear textfield			    		
 			    	$.get("/subjects/"+subject_code, function(data) {
+                        ga('send', 'event', 'add', 'add_subject', 'add');
 			    		if( data.error_message !== undefined){
 			    			$("#subject-wrapper").prepend(
 								'<div class="alert alert-danger alert-dismissable">'+
