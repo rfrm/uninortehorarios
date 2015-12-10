@@ -28,3 +28,4 @@ gem 'less-rails-bootstrap'
 gem 'typhoeus'
 gem 'nokogiri'
 
+gem 'newrelic_rpm'

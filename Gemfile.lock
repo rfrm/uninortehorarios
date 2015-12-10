@@ -100,6 +100,7 @@ GEM
     mime-types (1.25.1)
     mini_portile2 (2.0.0)
     multi_json (1.11.2)
+    newrelic_rpm (3.14.0.305)
     nokogiri (1.6.7)
       mini_portile2 (~> 2.0.0.rc2)
     pg (0.18.4)
@@ -181,6 +182,7 @@ DEPENDENCIES
   less-rails
   less-rails-bootstrap
   meta_request
+  newrelic_rpm
   nokogiri
   pg
   quiet_assets
