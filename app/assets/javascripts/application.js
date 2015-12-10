@@ -3,6 +3,7 @@
 //= require jquery.autocomplete
 //= require bootstrap.min
 //= require twitter/bootstrap/tooltip
+//= require autocomplete_data
 //= require home
 //= require filesaver.min
 //= require jspdf

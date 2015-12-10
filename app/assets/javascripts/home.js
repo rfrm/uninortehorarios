@@ -360,37 +360,33 @@ $(function(){
 		hide_wait_gif();	
 	}, 50);
 	
-	/* This gets the course list from the server and feeds it to the 
-	   autocomplete plugin*/
-	$.getJSON('/subjects/autocomplete').done(function(data){
-		$('#subject_code').autocomplete({
-		    lookup: data,
-		    onSelect: function (selection) {
-		    	var subject_code = selection.data;
-		    	if( !is_selected(subject_code) ){
-		    		show_wait_gif();
-		    		$(this).val(""); //Clear textfield			    		
-			    	$.get("/subjects/"+subject_code, function(data) {
-                        ga('send', 'event', 'add', 'add_subject', 'add');
-			    		if( data.error_message !== undefined){
-			    			$("#subject-wrapper").prepend(
-								'<div class="alert alert-danger alert-dismissable">'+
-								  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-								  data.error_message+
-								'</div>'
-			    			);
-			    			hide_wait_gif()
-			    		}
-			    		else{			    			
-				    		add_subject(data);
-				    		create_subject_panel(data);
-				    		hide_wait_gif()
-			    		}			    		
-			    	}, "json");	
-		    	}
-		    }
-		});
-	})
+    $('#subject_code').autocomplete({
+        lookup: autocomplete_data,
+        onSelect: function (selection) {
+            var subject_code = selection.data;
+            if( !is_selected(subject_code) ){
+                show_wait_gif();
+                $(this).val(""); //Clear textfield			    		
+                $.get("/subjects/"+subject_code, function(data) {
+                    ga('send', 'event', 'add', 'add_subject', 'add');
+                    if( data.error_message !== undefined){
+                        $("#subject-wrapper").prepend(
+                            '<div class="alert alert-danger alert-dismissable">'+
+                              '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                              data.error_message+
+                            '</div>'
+                        );
+                        hide_wait_gif()
+                    }
+                    else{			    			
+                        add_subject(data);
+                        create_subject_panel(data);
+                        hide_wait_gif()
+                    }			    		
+                }, "json");	
+            }
+        }
+    });
 
 	draw_schedule_table();
 

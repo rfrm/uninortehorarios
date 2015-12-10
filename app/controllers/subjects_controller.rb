@@ -3,14 +3,6 @@ require 'typhoeus'
 require 'nokogiri'
 
 class SubjectsController < ApplicationController
-
-	def autocomplete
-		@subject_data = Subject.all.collect{|s| {value: "#{s.name.upcase} (#{s.code})", data: "#{s.code}"}}
-		respond_to do |format|
-  		format.json  { render :json => @subject_data }
-  	end
-	end
-
 	def show
       subject_code = params[:id]
       /(?<mat2>\w{3})(?<curso>\d{4})/ =~ subject_code
@@ -31,7 +23,7 @@ class SubjectsController < ApplicationController
         lecture_teachers = Set.new
         lectures = div.css("table tr")[1..-1]
         lectures.each do |lecture|
-          none, start_date, end_date, days, hour, teacher, place = lecture.text.split("\r\n").map(&:strip)
+          days, hour, teacher = lecture.text.split("\r\n").map(&:strip).slice(3,6)
           start_hour, end_hour = hour.strip.chomp.split(" - ")
 
           #Process teacher name
