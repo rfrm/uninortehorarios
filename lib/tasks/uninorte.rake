@@ -23,7 +23,7 @@ namespace :uninorte do
     erb = ERB.new %Q{
     var autocomplete_data = [
       <%- subject_data.each do |code, name| -%>
-        { value: '<%= format_name(name, code) %>', data: '<%= code %>' },
+        { label: '<%= format_name(name, code) %>', value: '<%= code %>' },
       <%- end -%>
     ];}, nil, "-"
 

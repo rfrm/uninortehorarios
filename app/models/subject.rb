@@ -1,7 +1,7 @@
 # Encoding: utf-8
-class Subject < ActiveRecord::Base
-  attr_accessible :code, :name, :active
 
+
+class Subject < ActiveRecord::Base
   # Validations
   validates :name, :code,  presence: true
   validates :code, uniqueness: true

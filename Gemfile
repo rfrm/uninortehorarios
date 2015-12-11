@@ -1,30 +1,31 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
+ruby '2.2.3'
 
-gem 'rails', '3.2.16'
+gem 'rails', '~> 4.2.0'
 
 group :production do
   gem 'pg'
   gem 'heroku-deflater'
   gem 'rails_12factor'
-  gem 'unicorn', '~> 5.0', '>= 5.0.1'
 end
 
 group :development do
-  gem 'debugger'
+  gem 'byebug'
   gem 'sqlite3'
   gem 'meta_request'
   gem 'quiet_assets'
 end
 
-gem 'celluloid'
-gem 'therubyracer'
-gem 'less-rails'
-gem 'coffee-rails', '~> 3.2.1'
-gem 'uglifier', '>= 1.0.3'
+gem 'unicorn', '~> 5.0', '>= 5.0.1'
 gem 'jquery-rails'
-gem "jquery-ui-rails", "~> 4.0.5"
+gem "jquery-ui-rails"
+gem 'celluloid'
+gem 'less-rails'
+gem 'coffee-rails'
+gem 'uglifier'
 gem 'less-rails-bootstrap'
+gem 'therubyracer', '~> 0.12.2'
+gem 'execjs'
 gem 'typhoeus'
 gem 'nokogiri'
 gem 'newrelic_rpm'
@@ -32,3 +33,4 @@ gem 'rack-cache'
 gem 'dalli'
 gem 'kgio'
 gem "memcachier"
+

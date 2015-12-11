@@ -1,6 +1,6 @@
 //= require jquery
-//= require jquery.ui.selectable
-//= require jquery.autocomplete
+//= require jquery-ui/autocomplete
+//= require jquery-ui/selectable
 //= require bootstrap.min
 //= require twitter/bootstrap/tooltip
 //= require autocomplete_data

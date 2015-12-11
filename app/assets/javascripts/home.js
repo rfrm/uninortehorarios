@@ -361,12 +361,26 @@ $(function(){
 	}, 50);
 	
     $('#subject_code').autocomplete({
-        lookup: autocomplete_data,
-        onSelect: function (selection) {
-            var subject_code = selection.data;
+        source: autocomplete_data,
+        create: function() {
+            var input = $(this);
+            $(this).data('ui-autocomplete')._renderItem = function( ul, item ) { 
+                var searchValue = input.val();
+                var re = new RegExp(searchValue, "i");
+                var iPos = item.label.search(re);
+                var ePos = iPos + searchValue.length;
+                return $("<li>").attr( "data-value", item.value )
+                                  .append(item.label.substring(0, iPos))
+                                  .append($("<span>").text(item.label.substring(iPos, ePos)))
+                                  .append(item.label.substring(ePos))
+                                  .appendTo(ul);
+            }
+        },
+        select: function(event, ui){
+            var subject_code = ui.item.value;
             if( !is_selected(subject_code) ){
                 show_wait_gif();
-                $(this).val(""); //Clear textfield			    		
+                $(this).val(""); //clear textfield			    		
                 $.get("/subjects/"+subject_code, function(data) {
                     ga('send', 'event', 'add', 'add_subject', 'add');
                     if( data.error_message !== undefined){
@@ -385,7 +399,8 @@ $(function(){
                     }			    		
                 }, "json");	
             }
-        }
+            $(this).val(''); return false;
+        },
     });
 
 	draw_schedule_table();

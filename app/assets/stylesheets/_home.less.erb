@@ -1,0 +1,217 @@
+body{
+	margin-top: 5px;
+}
+
+th{
+	width: 15.33%;
+}
+
+#close-help{
+	top: 0;
+	right: 5px;
+}
+
+#filter-cleaner, #save-favorite{
+	padding: 7px
+}
+
+#message-div p{
+	display: inline-block;
+	margin: 0;
+	margin-top: 4px
+}
+
+#subject-wrapper{
+	margin-top: 20px;
+}
+
+#schedule-table th{
+	/*font-size: 9px;*/
+	padding: 2px;
+	text-align: center;
+}
+
+#schedule-table td{
+	font-size: 9px;
+	text-align: center;
+}
+
+#schedule-table tr th:first-child{
+	width: 9% !important;
+}
+
+#schedule-table .ui-selected {
+	background-color: rgb(169, 68, 66) !important
+}
+
+#schedule-table .ui-selecting {
+	background-color: rgb(242, 222, 222) !important 
+}
+
+#schedule-table tr:not(:first-child) th {
+  font-size: 10pt;
+}
+
+.alert{
+	padding: 0;
+	margin-bottom: 5px;
+}
+
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+
+.banned{
+	background-color: red;
+}
+
+.btn-ban span{
+	color: green;
+}
+
+.course-data{
+	height: 90px;
+	text-align: center;
+}
+
+.course-data p{
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.course-data .course-name{
+	font-size: 12px;
+	background-color: #f5f5f5;
+}
+
+.col-sm-10 p{
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+
+.fb-share-button{
+	float: right;
+	margin-top: 7px;
+}
+
+.glyphicon{
+	font-size: 20px;
+	vertical-align: middle !important;
+}
+
+.list-group{
+	margin-bottom: 0;
+}
+
+.list-group-item {
+	font-size: 14px;
+}
+
+.panel-heading h5{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.tachado{
+	text-decoration:line-through;
+}
+
+.wait{
+	width: 32px;
+	height: 32px;
+}
+
+.wait.waiting{
+  background: url('<%= asset_path "ajax-loader.gif" %>') no-repeat;
+}
+
+.block{
+    cursor:pointer;
+}
+
+/* custom fonts */
+
+@font-face {
+    font-family: LatoLight;
+    src: url('<%= asset_path "LatoLight.ttf" %>') format('truetype');
+}
+
+@font-face {
+    font-family: LatoRegular;
+    src: url('<%= asset_path "LatoRegular.ttf" %>') format('truetype');
+}
+
+
+
+/* font mixins */
+
+.base-font(@size, @weight: normal, @color: @full-text) {
+	font-size: @size;
+	font-weight: @weight;
+	color: @color;
+	line-height: @size * 1.25;
+}
+
+.title-sans(@size: 1em, @weight: normal, @color: @full-text) when (@weight = 300) {
+	font-family: LatoLight, Helvetica, Arial, sans-serif;
+}
+
+.title-sans(@size: 1em, @weight: normal, @color: @full-text) when (@weight = normal) {
+	font-family: LatoRegular, Helvetica, Arial, sans-serif;
+}
+
+.title-sans(@size: 1em, @weight: normal, @color: @full-text) {
+	.base-font(@size, @weight, @color);
+}
+
+/***********/
+
+body {
+  background: url('<%= asset_path "bg.jpg" %>') center center no-repeat fixed;
+  background-size: cover;
+}
+
+.center-window {
+	margin-top: 100px;
+	background: white;
+	height: 400px;
+	border: 3px solid #ccc;
+	padding: 32px;
+}
+
+h1 {
+	.title-sans(49px, 300, #777);
+}
+
+h2	 {
+	.title-sans(28px, 300, #aaa);
+}
+
+
+.btn.goto {
+	margin-top: 40px;
+	border-radius: 0;
+}
+
+.row.main {
+	padding: 32px;
+	margin-top: 32px;
+	background: white;
+	border: 3px solid #ccc;
+}
+
+.logo-small {
+	margin-bottom: 32px;
+}
+
+.ui-menu-item {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+
+  span{
+    color: rgb(51, 153, 255);
+  }
+}
+
+
