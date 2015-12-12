@@ -9,15 +9,13 @@ class SubjectsController < ApplicationController
       response = Typhoeus::post("http://guayacan.uninorte.edu.co/registro/resultado_curso.asp",
                   body: {valida: "OK", mat2: mat2, curso: curso, BtnCurso: "Buscar", datos_periodo: "201610",
                          nom_periodo: "Horarios Primer Semestre 2016"})
-      doc = Nokogiri::HTML(response.body)
+      doc = Nokogiri::HTML response.body
 
-      courses = []
-      divs = doc.css("body > div")
-      divs.each do |div|
-        raw_data = div.text.split("\r\n").map{|s| s.strip}.reject{|s| s.length == 0 }
+      courses = doc.css("body > div").map do |div|
+        raw_data = div.text.split("\r\n").map(&:strip).reject(&:empty?)
         name = raw_data[0]
         raw_data = Hash[raw_data.drop(1).take(5).map{|s| s.split(": ")}.map{|k, v| [k.parameterize.underscore, v]}]
-        data = {"name" => name, "available" => raw_data["cupos_disponibles"], "nrc" => raw_data["nrc"], "mat" => subject_code}
+        data = {name: name, available: raw_data["cupos_disponibles"].to_i, nrc: raw_data["nrc"], mat: subject_code}
 
         schedule = {}
         lecture_teachers = Set.new
@@ -56,17 +54,17 @@ class SubjectsController < ApplicationController
 
         data["lecture_teachers"] = lecture_teachers.to_a.sort
         data["schedule"] = schedule
-        courses.push(data)
+        data
       end
 
       subject_teachers = courses.map{|h| h["lecture_teachers"]}.flatten.uniq.sort
 
       begin
         expires_in 3.minute, :public => true
-        render :json => {:name => courses[0]["name"], :mat => subject_code,
-                         :subject_teachers => subject_teachers, :courses => courses }
+        render json: {name: courses[0][:name], mat: subject_code,
+                      subject_teachers: subject_teachers, courses: courses }
       rescue Exception => e
-        render :json => {:error_message => e.message}
+        render json: {error_message: e.message}
       end
 	end
 

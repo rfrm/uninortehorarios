@@ -1,7 +1,24 @@
 source 'https://rubygems.org'
+
 ruby '2.2.3'
 
+gem 'celluloid', '~> 0.17.2'
+gem 'connection_pool'
+gem 'dalli', '~> 2.7', '>= 2.7.4'
+gem 'jquery-rails', '~> 4.0', '>= 4.0.5'
+gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
+gem 'kgio', '~> 2.10'
+gem 'less-rails', '~> 2.7'
+gem 'less-rails-bootstrap', '~> 3.3', '>= 3.3.5.0'
+gem 'memcachier', '~> 0.0.2'
+gem 'nokogiri', '~> 1.6', '>= 1.6.7'
+gem 'newrelic_rpm', '~> 3.14', '>= 3.14.1.311'
+gem 'puma', '~> 2.15', '>= 2.15.3'
+gem 'rack-cache', '~> 1.5', '>= 1.5.1'
 gem 'rails', '~> 4.2.0'
+gem 'therubyracer', '~> 0.12.2'
+gem 'uglifier', '~> 2.7', '>= 2.7.2'
+gem 'typhoeus', '~> 0.8.0'
 
 group :production do
   gem 'pg'
@@ -15,22 +32,4 @@ group :development do
   gem 'meta_request'
   gem 'quiet_assets'
 end
-
-gem 'unicorn', '~> 5.0', '>= 5.0.1'
-gem 'jquery-rails'
-gem "jquery-ui-rails"
-gem 'celluloid'
-gem 'less-rails'
-gem 'coffee-rails'
-gem 'uglifier'
-gem 'less-rails-bootstrap'
-gem 'therubyracer', '~> 0.12.2'
-gem 'execjs'
-gem 'typhoeus'
-gem 'nokogiri'
-gem 'newrelic_rpm'
-gem 'rack-cache'
-gem 'dalli'
-gem 'kgio'
-gem "memcachier"
 
