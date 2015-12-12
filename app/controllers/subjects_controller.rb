@@ -12,7 +12,7 @@ class SubjectsController < ApplicationController
 
     begin
       expires_in @subject.expires_in, :public => true
-      render json: {name: courses[0][:name], mat: subject_code,
+      render json: {name: courses[0]["name"], mat: subject_code,
                     subject_teachers: subject_teachers, courses: courses }
     rescue Exception => e
       render json: {error_message: e.message}
