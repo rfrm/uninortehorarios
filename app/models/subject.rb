@@ -1,29 +1,29 @@
 # Encoding: utf-8
 
-
 class Subject < ActiveRecord::Base
-  # Validations
-  validates :name, :code,  presence: true
-  validates :code, uniqueness: true
+  EXPIRATION = 3.minutes
 
-  # Callbacks
-  before_save :format_attributes
+  validates :code, uniqueness: true, presence: true
 
-  # Methods
-  def format_attributes
-    self.name = escape_attr(self.name)
+  def expires_in
+    [refreshed_at + EXPIRATION - Time.zone.now, 0].max.seconds
   end
 
-  private
-  def escape_attr(attribute)
-    attribute = attribute.strip.squeeze(" ")
-    attribute = attribute.gsub("&","y")
-    attribute = attribute.gsub(/[^0-9a-zA-ZáéíóúÁÉÍÓÚÑñ'\s]/,"")
-    attribute = attribute.gsub("Ñ","ñ")
-    attribute = attribute.gsub(/[Áá]/,"a")
-    attribute = attribute.gsub(/[Éé]/,"e")
-    attribute = attribute.gsub(/[Íí]/,"i")
-    attribute = attribute.gsub(/[Óó]/,"o")
-    attribute = attribute.gsub(/[Úú]/,"u").downcase
+  def stale?
+    refreshed_at + EXPIRATION < Time.zone.now
+  end
+
+  def fresh?
+    Time.zone.now < refreshed_at + EXPIRATION
+  end
+
+  def needs_update?
+    parsed_data.blank? || stale?
+  end
+
+  def parsed_data=(value)
+    super(value)
+    self.refreshed_at = Time.zone.now
   end
 end
+

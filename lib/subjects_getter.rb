@@ -1,6 +1,6 @@
 require_relative 'getter'
 
-class SubjectsGetter < Getter
+class SubjectGetter < Getter
   def get_subjects(subject_code)
     r = Typhoeus.post "http://guayacan.uninorte.edu.co/registro/resultado_codigo.asp",
                        body: form_values(subject_code)

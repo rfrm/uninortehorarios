@@ -11,11 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210011752) do
+ActiveRecord::Schema.define(version: 20151212061854) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "subjects", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "code", null: false
+    t.string   "code",                      null: false
+    t.jsonb    "parsed_data",  default: {}
+    t.datetime "refreshed_at"
   end
+
+  add_index "subjects", ["code"], name: "index_subjects_on_code", using: :hash
 
 end
