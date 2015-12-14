@@ -147,14 +147,19 @@ function draw_schedule(schedule){
 				$("#cell-"+day_letter2day_word[day]+"-"+hour).text(course.name);
 			}
 		}
-		$("#schedule-info").append('<div class="col-md-2">'+
+		$("#schedule-info").append('<div class="col-sm-2">'+
 										'<div class="panel panel-default course-data">'+
 											'<p class="course-name">'+course.name+'</p>'+
-											'<p>nrc:'+course.nrc+'&nbsp;|&nbsp;cupos:'+course.available+'</p>'+
+											'<p>nrc:'+course.nrc+'</p>'+
+                                            '<p>cupos:'+course.available+'</p>'+
 											'<p>'+course.lecture_teachers+'</p>'+
 										'</div>'+
 									'</div>');
-	}
+
+    }
+    var course_data_panels = $("#schedule-info .course-data");
+    var maxHeight = Math.max.apply(null, $.map(course_data_panels, function(el){ return $(el).outerHeight(); }));
+    course_data_panels.css('min-height', maxHeight);
 }
 
 function create_subject_panel(subject_data) {
