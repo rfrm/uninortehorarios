@@ -463,18 +463,6 @@ $(function(){
 		generate_PDF();
     })
 
-    $("#generate_link").click(function(){
-      ga('send', 'event', 'button', 'generate_link', 'button');
-    });
-
-    $("#teachers_link").click(function(){
-      ga('send', 'event', 'button', 'teachers_link', 'button');
-    });
-
-    $("#home_link").click(function(){
-      ga('send', 'event', 'button', 'home_link', 'button');
-    });
-
 	myHelloWorker.addEventListener("message", function (event) {
 		switch(event.data.command){
 			case FINISHED_FILTERING:
