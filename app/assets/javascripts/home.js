@@ -211,7 +211,7 @@ function create_subject_panel(subject_data) {
 																		'<h5>'+subject_name+'</h5>'+
 																	'</div>');
 	$panel.append($panel_body);
-	$col = $('<div class="col-md-4 subject-col"></div>').hide().append($panel);
+	$col = $('<div class="col-md-4 col-sm-6 subject-col"></div>').hide().append($panel);
 	$("#subject-wrapper").append($col);
 	$panel.find("button.close").click(function(){
 		delete_subject(subject_code);
