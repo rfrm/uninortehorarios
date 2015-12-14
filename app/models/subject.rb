@@ -1,7 +1,7 @@
 # Encoding: utf-8
 
 class Subject < ActiveRecord::Base
-  EXPIRATION = 3.minutes
+  EXPIRATION = 10.minutes
 
   validates :code, uniqueness: true, presence: true
 

@@ -5,7 +5,7 @@ require 'nokogiri'
 class SubjectsController < ApplicationController
   def show
     subject_code = params[:id]
-    @subject = SubjectService.get subject_code
+    @subject = Subject.find_by code: subject_code # SubjectService.get subject_code
     courses = @subject.parsed_data
 
     subject_teachers = courses.map{|h| h["lecture_teachers"]}.flatten.uniq.sort

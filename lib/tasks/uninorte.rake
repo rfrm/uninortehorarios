@@ -36,13 +36,11 @@ namespace :uninorte do
   desc "updates the PostgreSQL cache"
   task update_psql_cache: :environment do
     CoursesDataGetter.code_list.each do |subject_code|
-      #Subject.transaction do
-        CoursesDataGetter.new.get_courses(subject_code).group_by{|c| c[:mat]}.each do |code, parsed_data|
-          s = Subject.where(code: code).first_or_create
-          s.parsed_data = parsed_data
-          s.save!
-        end
-      #end
+      CoursesDataGetter.get_courses(subject_code).group_by{|c| c[:mat]}.each do |code, parsed_data|
+        s = Subject.where(code: code).first_or_create
+        s.parsed_data = parsed_data
+        s.save
+      end
     end
   end
 end
