@@ -1,16 +1,16 @@
+default: &default
+  pool: 5
+  timeout: 5000
+  username: postgres
+  adapter: postgresql
 development:
-  adapter: postgresql
+  <<: *default
   database: linku_development
-  pool: 5
-  timeout: 5000
 test:
-  adapter: postgresql
+  <<: *default
   database: linku_test
-  pool: 5
-  timeout: 5000
 production:
-  adapter: postgresql
+  <<: *default
+  pool: 20
   database: linku_production
-  pool: 5
-  timeout: 5000
 
