@@ -34,7 +34,7 @@ namespace :uninorte do
   desc "updates the PostgreSQL cache"
   task update_psql_cache: :environment do
     pool = CoursesDataGetter.pool size: 4
-    courses = CoursesDataGetter.code_list.slice(0,2).map{|subject_code| pool.future.get_courses(subject_code)}.map(&:value).flatten
+    courses = CoursesDataGetter.code_list.map{|subject_code| pool.future.get_courses(subject_code)}.map(&:value).flatten
     courses.group_by{|c| c[:mat]}.each do |code, parsed_data|
       s = Subject.where(code: code).first_or_create
       s.parsed_data = parsed_data
