@@ -1,7 +1,7 @@
 require_relative 'getter'
 
 class CoursesDataGetter < Getter
-  def self.get_courses(subject_code)
+  def get_courses(subject_code)
     r = Typhoeus.post "http://guayacan.uninorte.edu.co/registro/resultado_codigo.asp", body: form_values(subject_code)
 
     doc = Nokogiri::HTML(r.body)
@@ -52,7 +52,7 @@ class CoursesDataGetter < Getter
     end
   end
 
-  def self.form_values(subject_code)
+  def form_values(subject_code)
     {'valida' => 'OK', 'mat' => subject_code, 'BtnCodigo' => 'Buscar',
      'datos_periodo' => current_period, 'nom_periodo' => current_period_name}
   end

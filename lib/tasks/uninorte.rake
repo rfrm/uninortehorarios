@@ -3,9 +3,7 @@
 require 'erb'
 require 'set'
 require 'benchmark'
-require_relative '../code_getter'
-require_relative '../subjects_getter'
-require_relative '../courses_data_getter'
+require_relative '../subject_getter'
 
 namespace :uninorte do
   desc "creates the codes.yml file"
@@ -18,8 +16,8 @@ namespace :uninorte do
 
   desc "creates the autocomplete_data.js" 
   task :create_autocomplete_data do
-    pool = SubjectsGetter.pool size: 4
-    subject_data = SubjectsGetter.code_list.map{|code| pool.future.get_subjects(code) }
+    pool = SubjectGetter.pool size: 4
+    subject_data = SubjectGetter.code_list.map{|code| pool.future.get_subjects(code) }
                                   .map(&:value).reduce(&:merge)
 
     erb = ERB.new %Q{
@@ -35,12 +33,12 @@ namespace :uninorte do
 
   desc "updates the PostgreSQL cache"
   task update_psql_cache: :environment do
-    CoursesDataGetter.code_list.each do |subject_code|
-      CoursesDataGetter.get_courses(subject_code).group_by{|c| c[:mat]}.each do |code, parsed_data|
-        s = Subject.where(code: code).first_or_create
-        s.parsed_data = parsed_data
-        s.save
-      end
+    pool = CoursesDataGetter.pool size: 4
+    courses = CoursesDataGetter.code_list.slice(0,2).map{|subject_code| pool.future.get_courses(subject_code)}.map(&:value).flatten
+    courses.group_by{|c| c[:mat]}.each do |code, parsed_data|
+      s = Subject.where(code: code).first_or_create
+      s.parsed_data = parsed_data
+      s.save
     end
   end
 end

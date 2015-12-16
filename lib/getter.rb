@@ -15,7 +15,7 @@ class Getter
     YAML.load File.read(file_path)
   end
 
-  def self.current_period
+  def current_period
     current_year, current_month = Time.now.year, Time.now.month
     period_code = if current_month < 6
       '10'
@@ -28,7 +28,7 @@ class Getter
     "#{current_year}#{period_code}"
   end
 
-  def self.current_period_name
+  def current_period_name
     name = 'Horarios '
     name = Time.now.month <= 5 ? 'Primer Semestre ' : 'Segundo Semestre '
     name + current_period
