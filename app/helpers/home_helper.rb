@@ -10,5 +10,9 @@ module HomeHelper
   def teachers_link
     link_to 'Profesores', 'http://linku-docentes.bitballoon.com/', class: 'btn btn-primary btn-lg goto', target: :blank
   end
+
+  def phone_link
+    render :partial => "shared/phone_link"
+  end
 end
 

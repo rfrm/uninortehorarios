@@ -458,6 +458,10 @@ $(function(){
         }
     });
 
+    $(".linkwa").click(function(){
+    	ga('send', 'event', 'link', 'phone', 'link');
+    });
+
     $("#allow_full").click(function(){
     	allow_full = $(this).find("[type=checkbox]").prop("checked");
     	worker_filter_schedules();
