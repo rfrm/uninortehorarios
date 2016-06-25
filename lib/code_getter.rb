@@ -7,7 +7,7 @@ class CodeGetter < Getter
     r = Typhoeus.post "http://guayacan.uninorte.edu.co/registro/resultado_nrc.asp", body: form_values(nrc)
     doc = Nokogiri::HTML(r.body)
     /Materia: (?<code>\w{3})\d{4}/ =~ doc.text
-    puts "Got #{nrc}"
+    puts "Got #{nrc}: #{code}"
     code
   end
 

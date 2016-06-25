@@ -5,7 +5,6 @@ require 'nokogiri'
 require 'celluloid'
 require 'celluloid/autostart'
 
-
 class Getter
   include Celluloid
 

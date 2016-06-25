@@ -3,20 +3,19 @@
 require 'erb'
 require 'set'
 require 'benchmark'
-require_relative '../subject_getter'
 
 namespace :uninorte do
   desc "creates the codes.yml file"
-  task :create_codes do
-    pool = CodeGetter.pool size: 4
-    codes = Set.new((0..9999).to_a.map{|nrc| pool.future.get_code(nrc) }.map(&:value).reject(&:nil?))
+  task create_codes: :environment do
+    pool = CodeGetter.pool size: 16 
+    codes = Set.new((1000..9999).to_a.map{|nrc| pool.future.get_code(nrc) }.map(&:value).reject(&:nil?))
     file_content = codes.to_a.sort.map{|code| " - #{code}"}.join("\n")
     File.open('config/codes.yml', 'w') { |file| file.write(file_content) }
   end
 
   desc "creates the autocomplete_data.js" 
-  task :create_autocomplete_data do
-    pool = SubjectGetter.pool size: 4
+  task create_autocomplete_data: :environment do
+    pool = SubjectGetter.pool size: 8
     subject_data = SubjectGetter.code_list.map{|code| pool.future.get_subjects(code) }
                                   .map(&:value).reduce(&:merge)
 

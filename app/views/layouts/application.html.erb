@@ -4,17 +4,19 @@
 	<title>Linku - Horarios</title>
 	<%= stylesheet_link_tag "application", :media => "all" %>
 	<%= csrf_meta_tags %>
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		ga('create', 'UA-36802759-2', 'linku.herokuapp.com');
-		ga('send', 'pageview');
-	</script>
+    <meta property="og:url"                content="http://linku.herokuapp/home/generate" />
+    <meta property="og:title"              content="LinkU actualizado segundo semestre 2016" />
+    <meta property="og:description"        content="LinkU ha sido actualizado con la información de los horarios para el segundo semestre de 2016. Por favor compártelo para que el mayor número de personas posibles se puedan enterar." />
+    <meta property="og:image"              content="<%= asset_url('logo_small.png') %>" />
 </head>
 <body>
+    <div id="updated">
+        <p style="display:inline-block">
+            Linku ha sido actualizado con la información de los horarios para el segundo semestre de 2016.
+            Por favor compártelo para que el mayor número de personas posibles se puedan enterar.
+        </p>
+        <div class="fb-share-button" data-href="http://linku.herokuapp.com/home/generate" data-layout="button_count" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flinku.herokuapp.com%2Fhome%2Fgenerate&amp;src=sdkpreparse">Compartir</a></div>
+    </div>
 	<div id="fb-root"></div>
     <div class="container">
       <div class="row">
@@ -24,6 +26,24 @@
       </div>
     </div>
 	<%= javascript_include_tag "application" %>	
+    <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v2.6&appId=812301318906199";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-36802759-2', 'linku.herokuapp.com');
+		ga('send', 'pageview');
+	</script>
 </body>
 </html>
 

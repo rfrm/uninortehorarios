@@ -14,3 +14,12 @@
  *= require bootstrap.min
  *= require _home
  */
+
+#updated {
+    height: 30px;
+    color: #31708f;
+    background-color: #d9edf7;
+    text-align: center;
+    padding-top: 5px;
+}
+
