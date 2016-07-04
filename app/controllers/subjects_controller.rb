@@ -5,7 +5,7 @@ class SubjectsController < ApplicationController
     courses = @subject.parsed_data
     subject_teachers = courses.map{ |h| h["lecture_teachers"] }.flatten.uniq.sort
 
-    expires_in @subject.expires_in, public: true, race_condition_ttl: 2.minutes.to_i
+    expires_in @subject.expires_in + 2.minutes, public: true
     render json: {name: courses[0]["name"], mat: subject_code,
                   subject_teachers: subject_teachers, courses: courses }
   end
