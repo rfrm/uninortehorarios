@@ -8,3 +8,10 @@
 //= require filesaver.min
 //= require jspdf
 //= require jspdf-standard_fonts_metrics
+//= require masonry
+
+$('.grid').masonry({
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-item',
+  percentPosition: true
+})
