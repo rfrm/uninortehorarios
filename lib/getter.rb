@@ -28,9 +28,11 @@ class Getter
   end
 
   def current_period_name
-    name = 'Horarios '
-    name = Time.now.month <= 5 ? 'Primer Semestre ' : 'Segundo Semestre '
-    name + current_period
+    "Horarios #{current_semester} #{current_period}"
+  end
+
+  def current_semester
+    Time.now.month <= 5 ? 'primer semestre' : 'segundo semestre'
   end
 end
 

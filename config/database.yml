@@ -11,6 +11,6 @@ test:
   database: linku_test
 production:
   <<: *default
-  pool: 20
+  pool: 50
   database: linku_production
 

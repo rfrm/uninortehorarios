@@ -216,15 +216,8 @@ function create_subject_panel(subject_data) {
 																		'<h5>'+subject_name+'</h5>'+
 																	'</div>');
 	$panel.append($panel_body);
-	$col = $('<div class="col-md-4 col-sm-6 subject-col"></div>').hide().append($panel);
-	$("#subject-wrapper").append($col);
-	$panel.find("button.close").click(function(){
-		delete_subject(subject_code);
-		$col.slideUp('slow', function(){
-			$col.remove();
-		});
-	});	
-	$col.slideDown(500);	
+	$col = $('<div class="grid-item col-md-4 col-sm-6 subject-col"></div>').append($panel);
+    $('.grid').append($col).masonry('prepended', $col);
 }
 
 function set_schedule_index(value){
@@ -470,6 +463,14 @@ $(function(){
     $("#save-as-pdf").click(function(){
     	ga('send', 'event', 'button', 'generate_pdf', 'button');
 		generate_PDF();
+    })
+
+    $("#subject-wrapper").on('click', 'button.close', function(event, el){
+        var button = $(event.target);
+        var subject_card = $(event.target).closest(".grid-item");
+        var subject_code = button.data("subject-to-delete");
+        delete_subject(subject_code);
+        $(".grid").masonry('remove', subject_card).masonry('layout');
     })
 
 	myHelloWorker.addEventListener("message", function (event) {
