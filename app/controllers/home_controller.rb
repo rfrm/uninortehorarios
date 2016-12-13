@@ -4,6 +4,6 @@ class HomeController < ApplicationController
   end
 
   def generate
-    fresh_when etag: '8e5db4379e43f5655185065849574244', public: true
+    fresh_when etag: '8e5db4379e43f5655185065849574245', public: true
   end
 end

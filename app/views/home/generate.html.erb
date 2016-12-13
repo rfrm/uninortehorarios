@@ -1,98 +1,102 @@
 <div class="row main">
-	<%= home_link %>
-	<div>
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#subject-picker" data-toggle="tab">Seleccionar materias</a></li>
-		  	<li><a href="#schedules-viewer" data-toggle="tab">Visor de horarios</a></li>
-				<a href="http://linku-docentes.bitballoon.com" target="_blank">
-					<button class="btn btn-primary pull-right" type="button"> 
-						Profesores <span class="badge">New</span>
-					</button>
-				</a>
-		  	<!-- <li><a href="#selected-schedules" data-toggle="tab">Horarios favoritos</a></li> -->
-		  	<!-- <li><a href="#help-tab" data-toggle="tab">¿Cómo lo uso?</a></li> -->
-		</ul>
-		<div class="tab-content" style="padding:20px">
-			<div id="subject-picker" class="tab-pane fade in active">
-				<div class="row">
-					<div class="col-sm-6">
-					<%= text_field_tag 'subject_code', nil, placeholder: 'Escribe el nombre o código de una materia', size: 50, class: "form-control" %>
-					</div>				
-					<div class="col-sm-1">
-						<div class="wait">					
-						</div>					
-					</div>					
-				</div>
-				<hr>				
-                <div class="container-fluid">
-                    <div id="subject-wrapper" class="row grid">
-                    </div>
-                </div>
-			</div>
-			
-			<div id="schedules-viewer" class="tab-pane fade">
-				<div id="alert-wrapper" class="row">
-					<div id="alert" class="alert alert-info alert-dismissable">
-						<button id="close-help" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<p>Puedes filtrar varios bloques usando la tecla Ctrl, haciendo click izquierdo y moviendo el mouse.</p>
-					</div>					
-				</div>				
-				<div class="row">
-					<div id="message-board">
-					</div>
-				</div>
-				<div id="schedule-info" class="row">
-				</div>
-				<div class="row">
-					<div class="table-responsive">
-						<table id="schedule-table" class="table table-bordered table-condensed">
-						</table>
-					</div>
-				</div>
-				<div id="schedule-selector-wrapper" class="row">
-					<div class="col-md-1">
-						<button id="button-prev-schedule" class="btn btn-default btn-sm btn-block">
-							<span class="glyphicon glyphicon-arrow-left"></span>
-						</button>
-					</div>
-					<div class="col-md-1">
-						<input type="text" class="form-control" id="schedule-index">
-					</div>
-					<div class="col-md-1">
-						<button id="button-next-schedule" class="btn btn-default btn-sm btn-block">
-							<span class="glyphicon glyphicon-arrow-right"></span>
-						</button>
-					</div>
-<!-- 					<div class="col-md-2">
-						<button id="save-favorite" class="btn btn-success btn-block btn-sm">
-							<span class="glyphicon glyphicon-floppy-disk"></span>
-							Guardar favorito
-						</button>
-					</div> -->
-					<div class="col-md-2">
-						<button id="save-as-pdf" class="btn btn-success btn-block btn-sm">
-							<span class="glyphicon glyphicon-floppy-disk"></span>
-							Guardar como PDF
-						</button>
-					</div>
-					<div class="col-md-2">
-						<button id="filter-cleaner" class="btn btn-danger btn-block btn-sm">
-							<span class="glyphicon glyphicon-minus-sign"></span>
-							Limpiar filtro
-						</button>
-					</div>	
-					<div id="allow_full" class="col-md-2 checkbox">
-					    <label>
-					    	<input type="checkbox"> Permitir cursos sin cupo
-					    </label>
-					</div>
-					<div class="col-md-1">
-						<div class="wait"></div>
-					</div>				
-				</div>
-			</div>
-		</div>
-	</div>	
+  <%= home_link %>
+  <div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#subject-picker" data-toggle="tab">Seleccionar materias</a></li>
+        <li><a href="#schedules-viewer" data-toggle="tab">Visor de horarios</a></li>
+        <a href="http://linku-docentes.bitballoon.com" target="_blank">
+          <button class="btn btn-primary pull-right" type="button"> 
+            Profesores <span class="badge">New</span>
+          </button>
+        </a>
+        <!-- <li><a href="#selected-schedules" data-toggle="tab">Horarios favoritos</a></li> -->
+        <!-- <li><a href="#help-tab" data-toggle="tab">¿Cómo lo uso?</a></li> -->
+    </ul>
+    <div class="tab-content" style="padding:20px">
+      <div id="subject-picker" class="tab-pane fade in active">
+        <div class="row">
+          <div class="col-sm-6">
+          <%= text_field_tag 'subject_code', nil, placeholder: 'Escribe el nombre o código de una materia', size: 50, class: "form-control" %>
+          </div>        
+          <div class="col-sm-1">
+            <div class="wait">          
+            </div>          
+          </div>          
+        </div>
+        <hr>        
+        <div class="container-fluid">
+          <div id="alert" class="alert alert-info alert-dismissable">
+            <button id="close-help" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <p>Recomendamos <b>no</b> bloquear profesores pendientes</p>
+          </div>
+          <div id="subject-wrapper" class="row grid">
+          </div>
+        </div>
+      </div>
+      
+      <div id="schedules-viewer" class="tab-pane fade">
+        <div id="alert-wrapper" class="row">
+          <div id="alert" class="alert alert-info alert-dismissable">
+            <button id="close-help" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <p>Puedes filtrar varios bloques usando la tecla Ctrl, haciendo click izquierdo y moviendo el mouse.</p>
+          </div>          
+        </div>        
+        <div class="row">
+          <div id="message-board">
+          </div>
+        </div>
+        <div id="schedule-info" class="row">
+        </div>
+        <div class="row">
+          <div class="table-responsive">
+            <table id="schedule-table" class="table table-bordered table-condensed">
+            </table>
+          </div>
+        </div>
+        <div id="schedule-selector-wrapper" class="row">
+          <div class="col-md-1">
+            <button id="button-prev-schedule" class="btn btn-default btn-sm btn-block">
+              <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+          </div>
+          <div class="col-md-1">
+            <input type="text" class="form-control" id="schedule-index">
+          </div>
+          <div class="col-md-1">
+            <button id="button-next-schedule" class="btn btn-default btn-sm btn-block">
+              <span class="glyphicon glyphicon-arrow-right"></span>
+            </button>
+          </div>
+<!--          <div class="col-md-2">
+            <button id="save-favorite" class="btn btn-success btn-block btn-sm">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              Guardar favorito
+            </button>
+          </div> -->
+          <div class="col-md-2">
+            <button id="save-as-pdf" class="btn btn-success btn-block btn-sm">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              Guardar como PDF
+            </button>
+          </div>
+          <div class="col-md-2">
+            <button id="filter-cleaner" class="btn btn-danger btn-block btn-sm">
+              <span class="glyphicon glyphicon-minus-sign"></span>
+              Limpiar filtro
+            </button>
+          </div>  
+          <div id="allow_full" class="col-md-2 checkbox">
+              <label>
+                <input type="checkbox"> Permitir cursos sin cupo
+              </label>
+          </div>
+          <div class="col-md-1">
+            <div class="wait"></div>
+          </div>        
+        </div>
+      </div>
+    </div>
+  </div>  
     <div class="row text-center">
         <%= phone_link %>
     </div>
