@@ -6,4 +6,3 @@ class AddParsedDataAndUpdateDateToSubjects < ActiveRecord::Migration
     add_index :subjects, :code, using: :hash
   end
 end
-

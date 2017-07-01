@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
-ruby '2.2.3'
+ruby '2.3.3'
 
-gem 'pg'
 gem 'celluloid', '~> 0.17.2'
 gem 'connection_pool'
 gem 'dalli', '~> 2.7', '>= 2.7.4'
@@ -22,12 +21,14 @@ gem 'uglifier', '~> 2.7', '>= 2.7.2'
 gem 'typhoeus', '~> 0.8.0'
 
 group :development do
+  gem 'rubocop'
   gem 'meta_request'
   gem 'quiet_assets'
 end
 
 group :test, :development do
   gem 'byebug'
+  gem 'sqlite3'
   gem 'factory_girl_rails', '~> 4.5'
 end
 
@@ -37,7 +38,6 @@ end
 
 group :production do
   gem 'heroku-deflater'
+  gem 'pg'
   gem 'rails_12factor'
 end
-
-
