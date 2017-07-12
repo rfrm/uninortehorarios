@@ -1,17 +1,18 @@
 default: &default
   pool: 5
   timeout: 5000
-  username: uninortehorarios
-  adapter: sqlite3
+  username: postgres
+  adapter: postgresql
 development:
   <<: *default
+  port: 5432
+  host: 0.0.0.0
   database: linku_development
 test:
   <<: *default
   database: linku_test
 production:
+  <<: *default
   pool: 50
   timeout: 5000
-  username: postgres
-  adapter: postgresql
   database: linku_production
